@@ -101,5 +101,5 @@ public class Artikel implements Serializable {
 			return false;
 		return true;
 	}
-//martin test
+
 }
