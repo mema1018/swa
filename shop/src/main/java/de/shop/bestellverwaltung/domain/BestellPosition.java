@@ -122,6 +122,6 @@ public class BestellPosition implements Serializable  {
 	public void setArtikelUri(URI artikelUri) {
 		this.artikelUri = artikelUri;
 	}
-	
+	//ressource
 	
 }
