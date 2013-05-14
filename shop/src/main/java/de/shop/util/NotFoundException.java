@@ -6,9 +6,8 @@ public class NotFoundException extends RuntimeException {
 	public NotFoundException(String msg) {
 		super(msg);
 	}
-
+	
 	public NotFoundException(String msg, Throwable t) {
-		super(msg, t); // super wird verwendet,wenn es in der Basisklasse einen
-						// Konstruktor gibt, der Parameter hat.
+		super(msg, t);
 	}
 }

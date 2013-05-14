@@ -1,71 +1,52 @@
 package de.shop.artikelverwaltung.domain;
 
+import static de.shop.util.Constants.MIN_ID;
+
 import java.io.Serializable;
-import java.math.BigDecimal;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import de.shop.util.IdGroup;
 
 public class Artikel implements Serializable {
-	/**
-	 * Generierte Seriennummer
-	 */
-	private static final long serialVersionUID = 6056633571995891182L;
-	private Long id;
-	private String bezeichnung;
-	private BigDecimal verkaufspreis;
-	private BigDecimal einkaufspreis;
+	private static final long serialVersionUID = 1472129607838538329L;
 	
+	public static final int BEZEICHNUNG_LENGTH_MIN = 2;
+	public static final int BEZEICHNUNG_LENGTH_MAX = 32;
+	
+	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
+	private Long id;
+	
+	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
+	@Size(min = BEZEICHNUNG_LENGTH_MIN, max = BEZEICHNUNG_LENGTH_MAX,
+	      message = "{artikelverwaltung.artikel.bezeichnung.length}")
+	private String bezeichnung;
+	
+		
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
-
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
 	}
-
-	public BigDecimal getVerkaufspreis() {
-		return verkaufspreis;
-	}
-
-	public void setVerkaufspreis(BigDecimal verkaufspreis) {
-		this.verkaufspreis = verkaufspreis;
-	}
-
-	public BigDecimal getEinkaufspreis() {
-		return einkaufspreis;
-	}
-
-	public void setEinkaufspreis(BigDecimal einkaufspreis) {
-		this.einkaufspreis = einkaufspreis;
-	}
-
-	@Override
-	public String toString() {
-		return "Artikel [id=" + id + ", bezeichnung=" + bezeichnung
-				+ ", verkaufspreis=" + verkaufspreis + ", einkaufspreis="
-				+ einkaufspreis + "]";
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((bezeichnung == null) ? 0 : bezeichnung.hashCode());
-		result = prime * result
-				+ ((einkaufspreis == null) ? 0 : einkaufspreis.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((verkaufspreis == null) ? 0 : verkaufspreis.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -78,28 +59,13 @@ public class Artikel implements Serializable {
 		if (bezeichnung == null) {
 			if (other.bezeichnung != null)
 				return false;
-		} 
-		else if (!bezeichnung.equals(other.bezeichnung))
-			return false;
-		if (einkaufspreis == null) {
-			if (other.einkaufspreis != null)
-				return false;
-		} 
-		else if (!einkaufspreis.equals(other.einkaufspreis))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} 
-		else if (!id.equals(other.id))
-			return false;
-		if (verkaufspreis == null) {
-			if (other.verkaufspreis != null)
-				return false;
-		} 
-		else if (!verkaufspreis.equals(other.verkaufspreis))
+		} else if (!bezeichnung.equals(other.bezeichnung))
 			return false;
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Artikel [id=" + id + ", bezeichnung=" + bezeichnung + "]";
+	}
 }

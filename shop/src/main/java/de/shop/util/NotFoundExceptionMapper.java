@@ -8,15 +8,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+
 @Provider
 @ApplicationScoped
-public class NotFoundExceptionMapper implements
-		ExceptionMapper<NotFoundException> {
+public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 	@Override
 	public Response toResponse(NotFoundException e) {
 		final String msg = e.getMessage();
-		final Response response = Response.status(NOT_FOUND).type(TEXT_PLAIN)
-				.entity(msg).build();
+		final Response response = Response.status(NOT_FOUND)
+		                                  .type(TEXT_PLAIN)
+		                                  .entity(msg)
+		                                  .build();
 		return response;
 	}
 

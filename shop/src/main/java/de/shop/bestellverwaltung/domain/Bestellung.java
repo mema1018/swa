@@ -1,73 +1,82 @@
 package de.shop.bestellverwaltung.domain;
 
+import static de.shop.util.Constants.MIN_ID;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.util.IdGroup;
 
-public  class Bestellung implements Serializable { // Daten dauerhaft speichern
+
+public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1618359234119003714L;
-
+	public static final int min = 2;
+	public static final int max = 32;
+	
+	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id;
+	
 	private boolean ausgeliefert;
+	
+	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}")
 	@JsonIgnore
 	private AbstractKunde kunde;
-	private URI kundeUri;
-	private URI bestellPositionURI;
+	
 	@JsonIgnore
+	private URI bestellPositionURI;
+	
+	//@JsonIgnore
+	@NotNull(message = "{bestellverwaltung.bestellung.bestellPositionen.notNull}")
+	@Size(min = 1)
+	@Valid
 	private List<BestellPosition> bestellPositionen;
-
+	
+	
+	private URI kundeUri;
+	
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public boolean isAusgeliefert() {
 		return ausgeliefert;
 	}
-
 	public void setAusgeliefert(boolean ausgeliefert) {
 		this.ausgeliefert = ausgeliefert;
 	}
-
 	public AbstractKunde getKunde() {
 		return kunde;
 	}
-
 	public void setKunde(AbstractKunde kunde) {
 		this.kunde = kunde;
 	}
-
+	
 	public URI getKundeUri() {
 		return kundeUri;
 	}
-
 	public void setKundeUri(URI kundeUri) {
 		this.kundeUri = kundeUri;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (ausgeliefert ? 1231 : 1237);
-		result = prime
-				* result
-				+ ((bestellPositionen == null) ? 0 : bestellPositionen
-						.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
-		result = prime * result
-				+ ((kundeUri == null) ? 0 : kundeUri.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -77,55 +86,28 @@ public  class Bestellung implements Serializable { // Daten dauerhaft speichern
 		if (getClass() != obj.getClass())
 			return false;
 		final Bestellung other = (Bestellung) obj;
-		if (ausgeliefert != other.ausgeliefert)
-			return false;
-		if (bestellPositionen == null) {
-			if (other.bestellPositionen != null)
-				return false;
-		} 
-		else if (!bestellPositionen.equals(other.bestellPositionen))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} 
+		}
 		else if (!id.equals(other.id))
-			return false;
-		if (kunde == null) {
-			if (other.kunde != null)
-				return false;
-		} 
-		else if (!kunde.equals(other.kunde))
-			return false;
-		if (kundeUri == null) {
-			if (other.kundeUri != null)
-				return false;
-		} 
-		else if (!kundeUri.equals(other.kundeUri))
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", ausgeliefert=" + ausgeliefert
-				+ ", kunde=" + kunde + ", kundeUri=" + kundeUri
-				+ ", bestellPositionURI=" + bestellPositionURI
-				+ ", bestellPositionen=" + bestellPositionen + "]";
+		return "Bestellung [id=" + id + ", ausgeliefert=" + ausgeliefert + ", kundeUri=" + kundeUri + "]";
 	}
-
 	public URI getBestellPositionURI() {
 		return bestellPositionURI;
 	}
-
-	public void setBestellPositionURI(URI bestellPosURI) {
-		this.bestellPositionURI = bestellPosURI;
+	public void setBestellPositionURI(URI bestellPositionURI) {
+		this.bestellPositionURI = bestellPositionURI;
 	}
-
 	public List<BestellPosition> getBestellPositionen() {
 		return bestellPositionen;
 	}
-
 	public void setBestellPositionen(List<BestellPosition> bestellPositionen) {
 		this.bestellPositionen = bestellPositionen;
 	}

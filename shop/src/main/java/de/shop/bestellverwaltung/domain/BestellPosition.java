@@ -1,31 +1,44 @@
 package de.shop.bestellverwaltung.domain;
 
+import static de.shop.util.Constants.MIN_ID;
+
 import java.io.Serializable;
 import java.net.URI;
 
-
+import javax.validation.constraints.Min;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import javax.validation.constraints.NotNull;
+
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.util.IdGroup;
 
 
 
 public class BestellPosition implements Serializable  {
 	private static final long serialVersionUID = 2815434747953562015L;
 
+	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellPosition.id.min}", groups = IdGroup.class)
 	private Long id;
 	
+	@Min(value = MIN_ID,message = "{bestellverwaltung.bestellPosition.anzahl.Min}", groups = IdGroup.class)
 	private long anzahl;
 	
 	@JsonIgnore
+	@NotNull(message = "{bestellverwaltung.bestellPosition.artikel.notNull}")
 	private Artikel artikel;
 	
+	// TODO bestellungURI
+    //@NotNull(message = "{bestellverwaltung.bestellPosition.bestellungURI.notNull}")
 	private URI bestellungURI;
 	
+	// TODO  artikelURI
+   @NotNull(message = "{bestellverwaltung.bestellPosition.artikelURI.notNull}")
 	private URI artikelUri;
 	
 	@JsonIgnore
+    //@NotNull(message = "{bestellverwaltung.bestellPosition.bestellung.notNull}")
 	private Bestellung bestellung;
 	
 	public Long getId() {
@@ -122,6 +135,4 @@ public class BestellPosition implements Serializable  {
 	public void setArtikelUri(URI artikelUri) {
 		this.artikelUri = artikelUri;
 	}
-	//ressource
-	
 }
