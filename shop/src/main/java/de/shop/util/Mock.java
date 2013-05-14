@@ -1,12 +1,17 @@
 package de.shop.util;
 
-import java.math.BigDecimal;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+
+import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.BestellPosition;
@@ -18,34 +23,47 @@ import de.shop.kundenverwaltung.domain.HobbyType;
 import de.shop.kundenverwaltung.domain.Privatkunde;
 
 /**
- * Emulation des Anwendungskerns
+ * Emulation der Datenbankzugriffsschicht
  */
 public final class Mock {
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+
 	private static final int MAX_ID = 99;
-	private static final int MAX_KUNDEN = 120;
+	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
 	private static final int MAX_ARTIKEL = 10;
-	private static final int MAX_BESTELLPOSITIONEN = 99;
-	private static final int MAX_ANZAHL_BESTPOS = 10;
-
+	private static final int JAHR = 2001;
+	private static final int MONAT = 0; // bei Calendar werden die Monate von 0 bis 11 gezaehlt
+	private static final int TAG = 31;  // bei Calendar die Monatstage ab 1 gezaehlt
+	
+	
 	public static AbstractKunde findKundeById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
-
-		final AbstractKunde kunde = id % 2 == 1 ? new Privatkunde()
-				: new Firmenkunde();
+		
+		final AbstractKunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
 		kunde.setId(id);
-		kunde.setNachname("Nachname" + id);
+		kunde.setNachname("Nachname");
 		kunde.setEmail("" + id + "@hska.de");
-
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final Date seit = seitCal.getTime();
+		kunde.setSeit(seit);
+		
 		final Adresse adresse = new Adresse();
-		adresse.setId(id + 1); // andere ID fuer die Adresse
+		adresse.setId(id + 1);        // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
-
+		
+		final List<Bestellung> bestellungen = new ArrayList<Bestellung>();
+		final Bestellung bestellung = new Bestellung();
+		bestellung.setId(Long.valueOf(10));
+		bestellung.setAusgeliefert(false);
+		kunde.setBestellungen(bestellungen);
+		kunde.getBestellungen().add(bestellung);
+		
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
 			final Set<HobbyType> hobbies = new HashSet<>();
@@ -53,47 +71,75 @@ public final class Mock {
 			hobbies.add(HobbyType.REISEN);
 			privatkunde.setHobbies(hobbies);
 		}
-
+		
 		return kunde;
 	}
 
-	public static Collection<AbstractKunde> findAllKunden() {
+	public static List<AbstractKunde> findAllKunden() {
 		final int anzahl = MAX_KUNDEN;
-		final Collection<AbstractKunde> kunden = new ArrayList<>(anzahl);
+		final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final AbstractKunde kunde = findKundeById(Long.valueOf(i));
-			kunden.add(kunde);
+			kunden.add(kunde);			
 		}
 		return kunden;
 	}
 
-	public static Collection<AbstractKunde> findKundenByNachname(String nachname) {
+	public static List<AbstractKunde> findKundenByNachname(String nachname) {
 		final int anzahl = nachname.length();
-		final Collection<AbstractKunde> kunden = new ArrayList<>(anzahl);
+		final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final AbstractKunde kunde = findKundeById(Long.valueOf(i));
 			kunde.setNachname(nachname);
-			kunden.add(kunde);
+			kunden.add(kunde);			
 		}
 		return kunden;
 	}
-
-	public static Collection<Bestellung> findBestellungenByKundeId(Long kundeId) {
+	
+	public static AbstractKunde findKundeByEmail(String email) {
+		if (email.startsWith("x")) {
+			return null;
+		}
+		
+		final AbstractKunde kunde = email.length() % 2 == 1 ? new Privatkunde() : new Firmenkunde();
+		kunde.setId(Long.valueOf(email.length()));
+		kunde.setNachname("Nachname");
+		kunde.setEmail(email);
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final Date seit = seitCal.getTime();
+		kunde.setSeit(seit);
+		
+		final Adresse adresse = new Adresse();
+		adresse.setId(kunde.getId() + 1);        // andere ID fuer die Adresse
+		adresse.setPlz("12345");
+		adresse.setOrt("Testort");
+		adresse.setKunde(kunde);
+		kunde.setAdresse(adresse);
+		
+		if (kunde.getClass().equals(Privatkunde.class)) {
+			final Privatkunde privatkunde = (Privatkunde) kunde;
+			final Set<HobbyType> hobbies = new HashSet<>();
+			hobbies.add(HobbyType.LESEN);
+			hobbies.add(HobbyType.REISEN);
+			privatkunde.setHobbies(hobbies);
+		}
+		
+		return kunde;
+	}
+	
+	public static List<Bestellung> findBestellungenByKundeId(Long kundeId) {
 		final AbstractKunde kunde = findKundeById(kundeId);
-
+		
 		// Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
-		final int anzahl = kundeId.intValue() % MAX_BESTELLUNGEN + 1; // 1, 2, 3
-																		// oder
-																		// 4
-																		// Bestellungen
+		final int anzahl = kundeId.intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
 		final List<Bestellung> bestellungen = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
 			bestellung.setKunde(kunde);
-			bestellungen.add(bestellung);
+			bestellungen.add(bestellung);			
 		}
 		kunde.setBestellungen(bestellungen);
-
+		
 		return bestellungen;
 	}
 
@@ -102,29 +148,22 @@ public final class Mock {
 			return null;
 		}
 
-		final AbstractKunde kunde = findKundeById(id + 1); // andere ID fuer den
-															// Kunden
-		final Bestellung bestellung = new Bestellung();
+		final AbstractKunde kunde = findKundeById(id + 1);  // andere ID fuer den Kunden
 
+		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
 		bestellung.setAusgeliefert(false);
 		bestellung.setKunde(kunde);
-
-		return bestellung;
-	}
-	public static Bestellung createBestellung(Bestellung bestellung) {
-
-		final AbstractKunde kunde = bestellung.getKunde();
-		final URI kundenUri = bestellung.getKundeUri();
-		final boolean ausgeliefert = bestellung.isAusgeliefert();
-		final URI bestellPosURI = bestellung.getBestellPositionURI();
-		bestellung.setId(Long.valueOf(10));
-		bestellung.setAusgeliefert(ausgeliefert);
-		bestellung.setKundeUri(kundenUri);
-		bestellung.setBestellPositionURI(bestellPosURI);
-		bestellung.setKunde(kunde);
-
-		System.out.println("Neue Bestellung " + bestellung);
+		
+		final Artikel artikel = findArtikelById(id+1);
+		final BestellPosition bestellPosition = findBestellPositionById(id+1);
+		bestellPosition.setArtikel(artikel);
+		bestellPosition.setBestellung(bestellung);
+		List<BestellPosition>bestellPositionen = new ArrayList<>();
+		bestellPositionen.add(bestellPosition);
+		
+		bestellung.setBestellPositionen(bestellPositionen);
+		
 		return bestellung;
 	}
 
@@ -137,114 +176,140 @@ public final class Mock {
 		adresse.setId((Long.valueOf(nachname.length())) + 1);
 		adresse.setKunde(kunde);
 		kunde.setBestellungen(null);
-
-		System.out.println("Neuer Kunde: " + kunde);
+		
+		LOGGER.infof("Neuer Kunde: %s", kunde);
 		return kunde;
 	}
 
 	public static void updateKunde(AbstractKunde kunde) {
-		System.out.println("Aktualisierter Kunde: " + kunde);
+		LOGGER.infof("Aktualisierter Kunde: %s", kunde);
 	}
 
-	public static void deleteKunde(Long kundeId) {
-		System.out.println("Kunde mit ID=" + kundeId + " geloescht");
+	public static void deleteKunde(AbstractKunde kunde) {
+		LOGGER.infof("Geloeschter Kunde: %s", kunde);
 	}
 
-	public static Artikel createArtikel(Artikel artikel) {
+	public static Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde) {
+		LOGGER.infof("Neue Bestellung: %s fuer Kunde: %s", bestellung, kunde);
+		return bestellung;
+	}
+	public static Bestellung createBestellung(Bestellung bestellung,Locale locale) {
+		
+		final AbstractKunde kunde = bestellung.getKunde();
+		final URI kundenUri = bestellung.getKundeUri();
+		final boolean ausgeliefert = bestellung.isAusgeliefert();
+		
+		bestellung.setId(Long.valueOf(10));
+		bestellung.setAusgeliefert(ausgeliefert);
+		bestellung.setKundeUri(kundenUri);
+		bestellung.setKunde(kunde);
+		
 
-		final String bezeichnung = artikel.getBezeichnung();
-		artikel.setId(Long.valueOf(bezeichnung.length()));
-
-		System.out.println("Neuer Artikel: " + artikel);
-		return artikel;
-
+		LOGGER.infof("Neue Bestellung: %s", bestellung);
+		System.out.println("Neue Bestellung " + bestellung);
+		
+		return bestellung;
 	}
 
 	public static Artikel findArtikelById(Long id) {
-		if (id > MAX_ARTIKEL) {
-			return null;
-		}
-
 		final Artikel artikel = new Artikel();
 		artikel.setId(id);
-		artikel.setBezeichnung("Tisch");
-		artikel.setEinkaufspreis(new BigDecimal("20.0"));
-		artikel.setVerkaufspreis(new BigDecimal("30.0"));
+		artikel.setBezeichnung("Playstation3");
 		return artikel;
 	}
-
 	public static void updateArtikel(Artikel artikel) {
-
-		System.out.println("Aktualisierter Artikel: " + artikel);
+		LOGGER.infof("Aktualisierter Artikel: %s", artikel);
+		
 	}
-
-	public static Collection<Artikel> findAllArtikel() {
-
+	public static List<Artikel> findAllArtikel() {
 		final int anzahl = MAX_ARTIKEL;
-		final Collection<Artikel> artikelPlural = new ArrayList<>(anzahl);
+		final List<Artikel> artikelPlural = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
-			artikelPlural.add(artikel);
+			artikelPlural.add(artikel);			
 		}
 		return artikelPlural;
 	}
-
-	public static Collection<Artikel> findArtikelByBezeichnung(
-			String bezeichnung) {
-
+	public static List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
 		final int anzahl = bezeichnung.length();
-		final Collection<Artikel> artikelPlural = new ArrayList<>(anzahl);
+		final List<Artikel> artikelPlural = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
 			artikel.setBezeichnung(bezeichnung);
 			artikelPlural.add(artikel);
 		}
 		return artikelPlural;
-
 	}
-
-	public static void deleteArtikel(Long artikelId) {
-		System.out.println("Artikel mit ID=" + artikelId + " geloescht");
+	public static void deleteArtikel(Artikel artikel) {
+		LOGGER.infof("Geloeschter Artikel: %s", artikel);	
 	}
-
+	public static Artikel createArtikel(Artikel artikel) {
+		
+		final String bezeichnung = artikel.getBezeichnung();
+		artikel.setId(Long.valueOf(bezeichnung.length()));
+				
+		LOGGER.infof("Neuer Artikel: %s", artikel);
+		return artikel;
+	}
 	public static BestellPosition findBestellPositionById(Long id) {
-		if (id > MAX_ID) {
-			return null;
-		}
+		
 		final BestellPosition bestellPosition = new BestellPosition();
-		final Artikel artikel = findArtikelById(id + 1);
-		final Bestellung bestellung = findBestellungById(id + 1);
-		bestellPosition.setId(id);
-		bestellPosition.setArtikel(artikel);
+		
+		final Artikel artikel = findArtikelById(id+1);
+		final Bestellung bestellung  = findBestellungById(id+1);
 		bestellPosition.setBestellung(bestellung);
-		bestellPosition.setAnzahl(MAX_ANZAHL_BESTPOS);
-
+		bestellPosition.setArtikel(artikel);
+		bestellPosition.setId(id);
+		bestellPosition.setAnzahl(10);
+		
 		return bestellPosition;
 	}
+	
+	public static BestellPosition createBestellPosition(BestellPosition bestellPosition) {
+	
+		final Long anzahl  = bestellPosition.getAnzahl();
+		bestellPosition.setId(Long.valueOf(1));
+		final URI artikelUri = bestellPosition.getArtikelUri();
 
-	public static Collection<BestellPosition> findBestellPositionByBestellungId(
-			Long bestellungId) {
-		final Bestellung bestellung = findBestellungById(bestellungId);
-
-		// Beziehungsgeflecht zwischen Bestellung und BestellPosition aufbauen
-		final int anzahl = bestellungId.intValue() % MAX_BESTELLPOSITIONEN + 1; // 1,
-																				// 2,
-																				// 3
-																				// oder
-																				// 4
-																				// Bestellungen
-		final List<BestellPosition> bestellPositionen = new ArrayList<>(anzahl);
-		for (int i = 1; i <= anzahl; i++) {
-			final BestellPosition bestellPosition = findBestellPositionById(Long
-					.valueOf(i));
-			bestellPosition.setBestellung(bestellung);
-			bestellPositionen.add(bestellPosition);
-		}
-		bestellung.setBestellPositionen(bestellPositionen);
-
-		return bestellPositionen;
+		final Artikel artikel = findArtikelById(Long.valueOf(1));
+		final BestellPosition bspos = new BestellPosition();
+		bspos.setAnzahl(anzahl);
+		bspos.setArtikelUri(artikelUri);
+		bspos.setArtikel(artikel);
+		
+		
+		return bspos;
 	}
+//	public static Collection<BestellPosition> findBestellPositionenByBestellungId(
+//			Long bestellungId) {
+//		final Bestellung bestellung = findBestellungById(bestellungId+1);
+//
+//		// Beziehungsgeflecht zwischen Bestellung und BestellPosition aufbauen
+//		final int anzahl = bestellungId.intValue() % MAX_BESTELLPOSITIONEN + 1; // 1,																	// Bestellungen
+//		final List<BestellPosition> bestellPositionen = new ArrayList<>(anzahl);
+//		for (int i = 1; i <= anzahl; i++) {
+//			final BestellPosition bestellPosition = findBestellPositionById(Long
+//					.valueOf(i));
+//			bestellPosition.setBestellung(bestellung);
+//			bestellPositionen.add(bestellPosition);
+//		}
+//		bestellung.setBestellPositionen(bestellPositionen);
+//
+//		return bestellPositionen;
+//	}
+	private Mock() { /**/ }
 
-	private Mock() { /**/
-	}
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 }
