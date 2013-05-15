@@ -40,7 +40,7 @@ public class Bestellung implements Serializable {
 	@Valid
 	private List<BestellPosition> bestellPositionen;
 	
-	
+	//TODO KundenUri fehlermeldung bei nicht setzung
 	private URI kundeUri;
 	
 	public Long getId() {

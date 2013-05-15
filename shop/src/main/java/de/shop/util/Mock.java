@@ -272,13 +272,13 @@ public final class Mock {
 		final URI artikelUri = bestellPosition.getArtikelUri();
 
 		final Artikel artikel = findArtikelById(Long.valueOf(1));
-		final BestellPosition bspos = new BestellPosition();
-		bspos.setAnzahl(anzahl);
-		bspos.setArtikelUri(artikelUri);
-		bspos.setArtikel(artikel);
+
+		bestellPosition.setAnzahl(anzahl);
+		bestellPosition.setArtikelUri(artikelUri);
+		bestellPosition.setArtikel(artikel);
 		
 		
-		return bspos;
+		return bestellPosition;
 	}
 //	public static Collection<BestellPosition> findBestellPositionenByBestellungId(
 //			Long bestellungId) {

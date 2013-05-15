@@ -133,15 +133,14 @@ public class BestellungResource {
 		final String stringKundeId = kundeUriString.substring(kundeUriString.lastIndexOf("/") + 1);
 		final Long kundeId = Long.valueOf(stringKundeId);
 		final AbstractKunde kunde  = ks.findKundeById(kundeId, locale);
-		
-		final BestellPosition hilfsBestellPosition = new BestellPosition();
-		final BestellPosition bestellPosition = bp.createBestellPosition(hilfsBestellPosition);
-		
+		bestellung.setKunde(kunde);	
+		final BestellPosition bestellPosition = bp.createBestellPosition(new BestellPosition());
 		
 		
-		bestellung.setKunde(kunde);
+		
+		
 //		kunde.getBestellungen().add(bestellung);
-		
+	
 		ArrayList<BestellPosition> bestellPositionen = new ArrayList<>();
 		final URI artikelURI = uriHelperArtikel.getUriArtikel(bestellPosition.getArtikel(), uriInfo);
 

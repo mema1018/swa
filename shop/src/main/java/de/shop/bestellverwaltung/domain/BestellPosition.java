@@ -34,7 +34,7 @@ public class BestellPosition implements Serializable  {
 	private URI bestellungURI;
 	
 	// TODO  artikelURI
-   @NotNull(message = "{bestellverwaltung.bestellPosition.artikelURI.notNull}")
+    @NotNull(message = "{bestellverwaltung.bestellPosition.artikelURI.notNull}")
 	private URI artikelUri;
 	
 	@JsonIgnore
