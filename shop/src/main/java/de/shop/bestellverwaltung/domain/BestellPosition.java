@@ -22,7 +22,7 @@ public class BestellPosition implements Serializable  {
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellPosition.id.min}", groups = IdGroup.class)
 	private Long id;
 	
-	@Min(value = MIN_ID,message = "{bestellverwaltung.bestellPosition.anzahl.Min}", groups = IdGroup.class)
+	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellPosition.anzahl.Min}", groups = IdGroup.class)
 	private long anzahl;
 	
 	@JsonIgnore

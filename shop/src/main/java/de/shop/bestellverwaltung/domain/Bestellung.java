@@ -19,8 +19,8 @@ import de.shop.util.IdGroup;
 
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 1618359234119003714L;
-	public static final int min = 2;
-	public static final int max = 32;
+	public static final int MIN = 2;
+	public static final int MAX = 32;
 	
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id;

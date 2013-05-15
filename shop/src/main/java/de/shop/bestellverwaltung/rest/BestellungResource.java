@@ -89,7 +89,7 @@ public class BestellungResource {
 		final BestellPosition bestellPosition = bp.findBestellPositionById(id);
 		// URLs innerhalb der gefundenen Bestellung anpassen
 		
-		List<BestellPosition> bestellPositionen = new ArrayList<>();
+		final List<BestellPosition> bestellPositionen = new ArrayList<>();
 		
 		uriHelperBestellung.updateUriBestellung(bestellung, uriInfo);
 		bestellPosition.setArtikelUri(uriHelperArtikel.getUriArtikel(artikel, uriInfo));
@@ -123,7 +123,7 @@ public class BestellungResource {
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public Response createBestellung(Bestellung bestellung){
+	public Response createBestellung(Bestellung bestellung) {
 		
 		final Locale locale = localeHelper.getLocale(headers);
 		
@@ -141,7 +141,7 @@ public class BestellungResource {
 		
 //		kunde.getBestellungen().add(bestellung);
 	
-		ArrayList<BestellPosition> bestellPositionen = new ArrayList<>();
+		final ArrayList<BestellPosition> bestellPositionen = new ArrayList<>();
 		final URI artikelURI = uriHelperArtikel.getUriArtikel(bestellPosition.getArtikel(), uriInfo);
 
 		bestellPosition.setArtikelUri(artikelURI);

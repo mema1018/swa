@@ -71,16 +71,17 @@ public class ArtikelResource {
 	@Path("{id:[1-9][0-9]*}")
 	public Artikel findArtikelById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
 		final Artikel artikel = as.findArtikelById(id);
-		if (artikel == null) {
-			final String msg = "Kein Artikel gefunden mit der ID " + id;
-			throw new NotFoundException(msg);
-		}
+//		if (artikel == null) {
+//			final String msg = "Kein Artikel gefunden mit der ID " + id;
+//			throw new NotFoundException(msg);
+//		}
 
 		return artikel;
 	}
 	
 	@GET
-	public Collection<Artikel> findArtikelByBezeichnung(@QueryParam("bezeichnung") @DefaultValue("") String bezeichnung) {
+	public Collection<Artikel> findArtikelByBezeichnung(@QueryParam("bezeichnung")
+	@DefaultValue("") String bezeichnung) {
 		Collection<Artikel> artikelPlural = null;
 		if ("".equals(bezeichnung)) {
 			artikelPlural = as.findAllArtikel();

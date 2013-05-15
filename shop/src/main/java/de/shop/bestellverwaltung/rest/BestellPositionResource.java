@@ -20,7 +20,7 @@ import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.bestellverwaltung.domain.BestellPosition;
 import de.shop.bestellverwaltung.service.BestellPositionService;
 import de.shop.util.LocaleHelper;
-import de.shop.util.NotFoundException;
+//import de.shop.util.NotFoundException;
 
 @Path("/bestellPosition")
 @Produces(APPLICATION_JSON)
@@ -54,16 +54,16 @@ public class BestellPositionResource {
 	@Path("{id:[1-9][0-9]*}")
 	public BestellPosition findBestellPositionById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
 		final BestellPosition bestellPosition = bs.findBestellPositionById(id);
-		if (bestellPosition == null) {
-			final String msg = "Keine BestellPosition gefunden mit der ID " + id;
-			throw new NotFoundException(msg);
-		}
+//		if (bestellPosition == null) {
+//			final String msg = "Keine BestellPosition gefunden mit der ID " + id;
+//			throw new NotFoundException(msg);
+//		}
 		uriHelperBestellPosition.updateUriBestellPosition(bestellPosition, uriInfo);
 		return bestellPosition;
 	}
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public BestellPosition createBestellPosition(BestellPosition bestellPosition){
+	public BestellPosition createBestellPosition(BestellPosition bestellPosition) {
 		final URI artikelUri = bestellPosition.getArtikelUri();
 		final String artikelUriString = artikelUri.toString();
 		final String stringArtikelId = artikelUriString.substring(artikelUriString.lastIndexOf("/") + 1);
