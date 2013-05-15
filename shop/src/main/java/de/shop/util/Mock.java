@@ -155,11 +155,11 @@ public final class Mock {
 		bestellung.setAusgeliefert(false);
 		bestellung.setKunde(kunde);
 		
-		final Artikel artikel = findArtikelById(id+1);
-		final BestellPosition bestellPosition = findBestellPositionById(id+1);
+		final Artikel artikel = findArtikelById(id + 1);
+		final BestellPosition bestellPosition = findBestellPositionById(id + 1);
 		bestellPosition.setArtikel(artikel);
 		bestellPosition.setBestellung(bestellung);
-		List<BestellPosition>bestellPositionen = new ArrayList<>();
+		final List<BestellPosition> bestellPositionen = new ArrayList<>();
 		bestellPositionen.add(bestellPosition);
 		
 		bestellung.setBestellPositionen(bestellPositionen);
@@ -193,7 +193,7 @@ public final class Mock {
 		LOGGER.infof("Neue Bestellung: %s fuer Kunde: %s", bestellung, kunde);
 		return bestellung;
 	}
-	public static Bestellung createBestellung(Bestellung bestellung,Locale locale) {
+	public static Bestellung createBestellung(Bestellung bestellung, Locale locale) {
 		
 		final AbstractKunde kunde = bestellung.getKunde();
 		final URI kundenUri = bestellung.getKundeUri();
@@ -255,8 +255,8 @@ public final class Mock {
 		
 		final BestellPosition bestellPosition = new BestellPosition();
 		
-		final Artikel artikel = findArtikelById(id+1);
-		final Bestellung bestellung  = findBestellungById(id+1);
+		final Artikel artikel = findArtikelById(id + 1);
+		final Bestellung bestellung  = findBestellungById(id + 1);
 		bestellPosition.setBestellung(bestellung);
 		bestellPosition.setArtikel(artikel);
 		bestellPosition.setId(id);
@@ -285,7 +285,8 @@ public final class Mock {
 //		final Bestellung bestellung = findBestellungById(bestellungId+1);
 //
 //		// Beziehungsgeflecht zwischen Bestellung und BestellPosition aufbauen
-//		final int anzahl = bestellungId.intValue() % MAX_BESTELLPOSITIONEN + 1; // 1,																	// Bestellungen
+//		final int anzahl = bestellungId.intValue() % MAX_BESTELLPOSITIONEN + 1; // 1,																	
+// 		Bestellungen
 //		final List<BestellPosition> bestellPositionen = new ArrayList<>(anzahl);
 //		for (int i = 1; i <= anzahl; i++) {
 //			final BestellPosition bestellPosition = findBestellPositionById(Long
