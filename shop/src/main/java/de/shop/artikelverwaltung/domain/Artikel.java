@@ -59,7 +59,8 @@ public class Artikel implements Serializable {
 		if (bezeichnung == null) {
 			if (other.bezeichnung != null)
 				return false;
-		} else if (!bezeichnung.equals(other.bezeichnung))
+		}
+		else if (!bezeichnung.equals(other.bezeichnung))
 			return false;
 		return true;
 	}
