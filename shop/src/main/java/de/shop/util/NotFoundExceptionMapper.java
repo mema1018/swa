@@ -11,6 +11,7 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @ApplicationScoped
+@Log
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 	@Override
 	public Response toResponse(NotFoundException e) {

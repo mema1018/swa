@@ -7,9 +7,11 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.util.Log;
 
 
 @ApplicationScoped
+@Log
 public class UriHelperKunde {
 	public URI getUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
@@ -18,6 +20,7 @@ public class UriHelperKunde {
 		final URI kundeUri = ub.build(kunde.getId());
 		return kundeUri;
 	}
+	
 	
 	public void updateUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
 		// URL fuer Bestellungen setzen
