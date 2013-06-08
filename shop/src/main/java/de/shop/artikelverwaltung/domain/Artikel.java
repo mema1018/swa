@@ -47,7 +47,12 @@ import de.shop.util.IdGroup;
             	query = "SELECT      a"
                         + " FROM     Artikel a"
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
-			 	        + " ORDER BY a.id ASC")
+			 	        + " ORDER BY a.id ASC"),
+	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
+				query = "SELECT		 a"
+						+ " FROM	 Artikel a"
+						+ " WHERE	 a.id = " + Artikel.PARAM_ID
+						+ " ORDER BY a.id ASC")
 })
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
@@ -59,9 +64,11 @@ public class Artikel implements Serializable {
 	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
+	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
 
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
+	public static final String PARAM_ID = "id";
 
 	@Id
 	@GeneratedValue
@@ -77,7 +84,7 @@ public class Artikel implements Serializable {
 	private double preis;
 	
 	private boolean ausgesondert;
-	
+
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@JsonIgnore
@@ -92,10 +99,11 @@ public class Artikel implements Serializable {
 		super();
 	}
 	
-	public Artikel(String bezeichnung, double preis) {
+	public Artikel(String bezeichnung, double preis,boolean ausgesondert) {
 		super();
 		this.bezeichnung = bezeichnung;
 		this.preis = preis;
+		this.ausgesondert = ausgesondert;
 	}
 
 	@PrePersist
