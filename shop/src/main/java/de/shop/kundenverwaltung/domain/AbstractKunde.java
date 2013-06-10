@@ -517,4 +517,3 @@ public abstract class AbstractKunde implements Serializable {
 		return true;
 	}
 }
-

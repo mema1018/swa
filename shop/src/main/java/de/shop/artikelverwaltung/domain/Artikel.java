@@ -22,9 +22,12 @@ import javax.persistence.Temporal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
+
+
 
 import de.shop.util.IdGroup;
 
@@ -49,11 +52,13 @@ import de.shop.util.IdGroup;
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
 			 	        + " ORDER BY a.id ASC"),
 	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
-				query = "SELECT		 a"
-						+ " FROM	 Artikel a"
-						+ " WHERE	 a.id = " + Artikel.PARAM_ID
-						+ " ORDER BY a.id ASC")
+	query = "SELECT		 a"
+			+ " FROM	 Artikel a"
+			+ " WHERE	 a.id = " + Artikel.PARAM_ID
+			+ " ORDER BY a.id ASC")
+	
 })
+@XmlRootElement
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
@@ -65,7 +70,6 @@ public class Artikel implements Serializable {
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
 	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
-
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
 	public static final String PARAM_ID = "id";
@@ -81,10 +85,11 @@ public class Artikel implements Serializable {
 	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
 	private String bezeichnung = "";
 	
+	@NotNull(message = "{artikelverwaltung.artikel.preis.notNull}")
 	private double preis;
 	
 	private boolean ausgesondert;
-
+	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@JsonIgnore
@@ -95,15 +100,23 @@ public class Artikel implements Serializable {
 	@JsonIgnore
 	private Date aktualisiert;
 	
+	
+	public void setValues(Artikel a) {
+		bezeichnung = a.bezeichnung;
+		preis = a.preis;
+		ausgesondert = a.ausgesondert;
+		erzeugt = a.erzeugt;
+		aktualisiert = a.aktualisiert;
+	}
+	
 	public Artikel() {
 		super();
 	}
 	
-	public Artikel(String bezeichnung, double preis,boolean ausgesondert) {
+	public Artikel(String bezeichnung, double preis) {
 		super();
 		this.bezeichnung = bezeichnung;
 		this.preis = preis;
-		this.ausgesondert = ausgesondert;
 	}
 
 	@PrePersist

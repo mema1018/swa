@@ -36,6 +36,7 @@ import de.shop.bestellverwaltung.rest.UriHelperBestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
+import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.Privatkunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
@@ -216,7 +217,7 @@ public class KundeResource {
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public Response createPrivatkunde(Privatkunde kunde) {
+	public Response createKunde(AbstractKunde kunde) {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		kunde.setId(KEINE_ID);
@@ -234,6 +235,7 @@ public class KundeResource {
 		final URI kundeUri = uriHelperKunde.getUriKunde(kunde, uriInfo);
 		return Response.created(kundeUri).build();
 	}
+
 	
 	
 	/**
@@ -281,4 +283,3 @@ public class KundeResource {
 		ks.deleteKunde(kunde);
 	}
 }
-
