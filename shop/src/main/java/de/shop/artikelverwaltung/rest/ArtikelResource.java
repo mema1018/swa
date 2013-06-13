@@ -7,6 +7,7 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -14,12 +15,14 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -29,9 +32,9 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.kundenverwaltung.domain.Adresse;
-import de.shop.kundenverwaltung.domain.Privatkunde;
-import de.shop.kundenverwaltung.rest.UriHelperKunde;
+import de.shop.artikelverwaltung.service.ArtikelService.FetchTypeArtikel;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
@@ -81,7 +84,29 @@ public class ArtikelResource {
 			throw new NotFoundException(msg);
 		}
 		return artikel;
+	}	
+	
+	@GET
+	public Artikel findArtikelByPreis(@QueryParam("preis") Double preis) {
+		final Artikel artikel = as.findArtikelByPreis(preis);
+		if (artikel == null) {
+			final String msg = "Kein Artikel gefunden mit dem Preis " + preis;
+			throw new NotFoundException(msg);
+		}
+		return artikel;
+	}	
+
+	@GET
+	public Artikel findArtikelByBezeichnung(@QueryParam("bezeichnung") @DefaultValue("") String bezeichnung) {
+		final Artikel artikel = as.findArtikelByBezeichnung(bezeichnung);
+		if (artikel == null) {
+			final String msg = "Kein Artikel gefunden mit der Bezeichnung " + bezeichnung;
+			throw new NotFoundException(msg);
+		}
+		return artikel;
 	}
+	
+	
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
@@ -89,8 +114,11 @@ public class ArtikelResource {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		artikel.setId(KEINE_ID);
-		LOGGER.tracef("Artikel: %s", artikel);
+		
 		artikel=as.createArtikel(artikel, locale);
+		
+		LOGGER.tracef("Artikel: %s", artikel);
+		
 		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
 		return Response.created(artikelUri).build();
 	}
@@ -121,4 +149,5 @@ public class ArtikelResource {
 			throw new NotFoundException(msg);
 		}
 	}
+
 }
