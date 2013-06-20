@@ -28,14 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
 
-
-
-
-
-
-
-
-import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.util.IdGroup;
 
 
