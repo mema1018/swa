@@ -59,7 +59,7 @@ import de.shop.util.IdGroup;
 	query = "SELECT		 a"
 			+ " FROM	 Artikel a"
 			+ " WHERE	 a.preis = :" + Artikel.PARAM_PREIS
-			+ " ORDER BY a.preis ASC"),
+			+ " ORDER BY a.preis ASC")
 	
 })
 @XmlRootElement

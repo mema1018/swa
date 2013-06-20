@@ -111,7 +111,7 @@ public class ArtikelResource {
 
 		artikel.setId(KEINE_ID);
 		
-		artikel=as.createArtikel(artikel, locale);
+		artikel = as.createArtikel(artikel, locale);
 		
 		LOGGER.tracef("Artikel: %s", artikel);
 		
