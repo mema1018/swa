@@ -229,7 +229,7 @@ public class KundeResource {
 		}
 		kunde.setBestellungenUri(null);
 		
-		kunde = (Privatkunde) ks.createKunde(kunde, locale);
+		kunde = ks.createKunde(kunde, locale);
 		LOGGER.tracef("Kunde: %s", kunde);
 		
 		final URI kundeUri = uriHelperKunde.getUriKunde(kunde, uriInfo);
@@ -245,7 +245,7 @@ public class KundeResource {
 	@PUT
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public void updatePrivatkunde(Privatkunde kunde) {
+	public void updateAbstractKunde(AbstractKunde kunde) {
 		// Vorhandenen Kunden ermitteln
 		final Locale locale = localeHelper.getLocale(headers);
 		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE, locale);
@@ -261,7 +261,7 @@ public class KundeResource {
 		LOGGER.tracef("Kunde nachher: %s", origKunde);
 		
 		// Update durchfuehren
-		kunde = (Privatkunde) ks.updateKunde(origKunde, locale);
+		kunde = ks.updateKunde(origKunde, locale);
 		if (kunde == null) {
 			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + origKunde.getId();

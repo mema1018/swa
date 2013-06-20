@@ -7,7 +7,6 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -32,9 +31,6 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.artikelverwaltung.service.ArtikelService.FetchTypeArtikel;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
@@ -139,7 +135,7 @@ public class ArtikelResource {
 	
 		// Daten des vorhandenen Artikels ueberschreiben
 		orginalArtikel.setValues(artikel);
-		LOGGER.tracef("Kunde nachher: %s", orginalArtikel);
+		LOGGER.tracef("Artikel nachher: %s", orginalArtikel);
 		
 		// Update durchfuehren
 		artikel = as.updateArtikel(orginalArtikel, locale);

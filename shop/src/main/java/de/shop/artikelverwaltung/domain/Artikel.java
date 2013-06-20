@@ -120,8 +120,6 @@ public class Artikel implements Serializable {
 		bezeichnung = a.bezeichnung;
 		preis = a.preis;
 		ausgesondert = a.ausgesondert;
-		erzeugt = a.erzeugt;
-		aktualisiert = a.aktualisiert;
 	}
 	
 	public Artikel() {
