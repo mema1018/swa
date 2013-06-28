@@ -103,12 +103,10 @@ public class KundeResource {
 		final Locale locale = localeHelper.getLocale(headers);
 		final AbstractKunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE, locale);
 		if (kunde == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + id;
 			throw new NotFoundException(msg);
 		}
 	
-		// URLs innerhalb des gefundenen Kunden anpassen
 		uriHelperKunde.updateUriKunde(kunde, uriInfo);
 		
 		return kunde;
@@ -248,7 +246,6 @@ public class KundeResource {
 		final Locale locale = localeHelper.getLocale(headers);
 		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE, locale);
 		if (origKunde == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + kunde.getId();
 			throw new NotFoundException(msg);
 		}
@@ -261,7 +258,6 @@ public class KundeResource {
 		// Update durchfuehren
 		kunde = ks.updateKunde(origKunde, locale);
 		if (kunde == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + origKunde.getId();
 			throw new NotFoundException(msg);
 		}

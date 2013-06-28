@@ -123,7 +123,7 @@ public class BestellungResource {
 	                                      .build();
 		throw new WebApplicationException(response);
 		
-		// TODO findLieferungenByBestellungId noch nicht implementiert
+		
 	}
 
 	
@@ -231,7 +231,7 @@ public class BestellungResource {
 
 		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
 		final Response response = Response.created(bestellungUri).build();
-		LOGGER.fatal(bestellungUri.toString());
+		//LOGGER.fatal(bestellungUri.toString());
 		
 		return response;
 	}

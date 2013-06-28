@@ -127,7 +127,6 @@ public class ArtikelResource {
 		final Locale locale = localeHelper.getLocale(headers);
 		final Artikel orginalArtikel = as.findArtikelById(artikel.getId());
 		if (orginalArtikel == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Artikel gefunden mit der ID " + artikel.getId();
 			throw new NotFoundException(msg);
 		}
@@ -140,7 +139,6 @@ public class ArtikelResource {
 		// Update durchfuehren
 		artikel = as.updateArtikel(orginalArtikel, locale);
 		if (artikel == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Artikel gefunden mit der ID " + orginalArtikel.getId();
 			throw new NotFoundException(msg);
 		}
