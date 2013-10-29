@@ -44,6 +44,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -52,6 +54,7 @@ import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
@@ -65,6 +68,9 @@ import de.shop.util.IdGroup;
 @Table(name = "kunde")
 @Inheritance
 @DiscriminatorColumn(name = "art", length = 1)
+@XmlRootElement
+@Formatted
+@XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
 @NamedQueries({
 	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN,
                 query = "SELECT k"
@@ -110,6 +116,10 @@ import de.shop.util.IdGroup;
 	            query = "SELECT k"
 				        + " FROM  AbstractKunde k"
 			            + " WHERE k.adresse.plz = :" + AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ),
+	@NamedQuery(name  = AbstractKunde.FIND_KUNDE_BY_USERNAME,
+			    query = "SELECT   k"
+						+ " FROM  AbstractKunde k"
+			            + " WHERE CONCAT('', k.id) = :" + AbstractKunde.PARAM_KUNDE_USERNAME),
 	@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_DATE,
 			    query = "SELECT k"
 			            + " FROM  AbstractKunde k"
@@ -162,6 +172,7 @@ public abstract class AbstractKunde implements Serializable {
 		                       PREFIX + "findKundeByIdFetchBestellungen";
 	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
+	public static final String FIND_KUNDE_BY_USERNAME = PREFIX + "findKundeByUsername";
 	public static final String FIND_KUNDEN_BY_DATE = PREFIX + "findKundenByDate";
 	public static final String FIND_PRIVATKUNDEN_FIRMENKUNDEN = PREFIX + "findPrivatkundenFirmenkunden";
 	
@@ -170,6 +181,7 @@ public abstract class AbstractKunde implements Serializable {
 	public static final String PARAM_KUNDE_NACHNAME = "nachname";
 	public static final String PARAM_KUNDE_NACHNAME_PREFIX = "nachnamePrefix";
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
+	public static final String PARAM_KUNDE_USERNAME = "username";
 	public static final String PARAM_KUNDE_SEIT = "seit";
 	public static final String PARAM_KUNDE_EMAIL = "email";
 
@@ -193,7 +205,7 @@ public abstract class AbstractKunde implements Serializable {
 	@Temporal(DATE)
 	@Past(message = "{kundenverwaltung.kunde.seit.past}")
 	private Date seit;
-
+	
 	@Column(nullable = false, precision = 5, scale = 4)
 	private BigDecimal rabatt;
 	
@@ -204,7 +216,8 @@ public abstract class AbstractKunde implements Serializable {
 	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
 	private String email;
 	
-	private boolean newsletter = false;
+	@Column(nullable = false)
+	private int newsletter;
 	
 	@Column(length = PASSWORD_LENGTH_MAX)
 	private String password;
@@ -266,6 +279,7 @@ public abstract class AbstractKunde implements Serializable {
 	@PreUpdate
 	protected void preUpdate() {
 		aktualisiert = new Date();
+		erzeugt = new Date();
 	}
 	
 	@PostLoad
@@ -282,6 +296,13 @@ public abstract class AbstractKunde implements Serializable {
 		email = k.email;
 		password = k.password;
 		passwordWdh = k.password;
+		erzeugt = k.erzeugt;
+		aktualisiert = k.aktualisiert;
+		adresse.setId(k.adresse.getId());
+		adresse.setOrt(k.adresse.getOrt());
+		adresse.setPlz(k.adresse.getPlz());
+		adresse.setStrasse(k.adresse.getStrasse());
+		adresse.setHausnr(k.adresse.getHausnr());
 	}
 	
 	public Long getId() {
@@ -358,11 +379,11 @@ public abstract class AbstractKunde implements Serializable {
 		this.email = email;
 	}
 
-	public void setNewsletter(boolean newsletter) {
+	public void setNewsletter(int newsletter) {
 		this.newsletter = newsletter;
 	}
 
-	public boolean isNewsletter() {
+	public int isNewsletter() {
 		return newsletter;
 	}
 

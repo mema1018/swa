@@ -47,7 +47,7 @@ public class UriHelperBestellung {
 		// URL fuer Lieferungen setzen
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
                                      .path(BestellungResource.class)
-                                     .path(BestellungResource.class, "findLieferungenByBestellungId");
+                                     .path(BestellungResource.class, "findBestellungById");
 		final URI uri = ub.build(bestellung.getId());
 		bestellung.setLieferungenUri(uri);
 		

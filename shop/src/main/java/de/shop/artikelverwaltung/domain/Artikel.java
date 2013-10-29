@@ -3,11 +3,16 @@ package de.shop.artikelverwaltung.domain;
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
+
+
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,20 +24,23 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
 
 
+
 @Entity
 @Table(name = "artikel")
+@Cacheable
+@XmlRootElement
 @NamedQueries({
 	@NamedQuery(name  = Artikel.FIND_VERFUEGBARE_ARTIKEL,
             	query = "SELECT      a"
@@ -51,34 +59,29 @@ import de.shop.util.IdGroup;
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
 			 	        + " ORDER BY a.id ASC"),
 	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
-	query = "SELECT		 a"
-			+ " FROM	 Artikel a"
-			+ " WHERE	 a.id = " + Artikel.PARAM_ID
-			+ " ORDER BY a.id ASC"),
-	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_PREIS,
-	query = "SELECT		 a"
-			+ " FROM	 Artikel a"
-			+ " WHERE	 a.preis = :" + Artikel.PARAM_PREIS
-			+ " ORDER BY a.preis ASC")
-	
+				query = "SELECT		 a"
+						+ " FROM	 Artikel a"
+						+ " WHERE	 a.id = " + Artikel.PARAM_ID
+						+ " ORDER BY a.id ASC")
 })
-@XmlRootElement
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private static final int BEZEICHNUNG_LENGTH_MAX = 32;
-	private static final String BEZEICHNUNG_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
 	
 	private static final String PREFIX = "Artikel.";
 	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
 	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
-	public static final String FIND_ARTIKEL_BY_PREIS = PREFIX + "findArtikelByPreis";
+	public static final String INSERT_ARTIKEL = PREFIX + "INSERT_ARTIKEL";
+
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
 	public static final String PARAM_ID = "id";
+	
+	public static final int ERSTE_VERSION = 0;
 
 	@Id
 	@GeneratedValue
@@ -86,48 +89,49 @@ public class Artikel implements Serializable {
 	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 	
+
+	
 	@Column(length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
 	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
 	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
-	@Pattern(regexp = BEZEICHNUNG_PATTERN, message = "{artikelverwaltungverwaltung.artikel.bezeichnung.pattern}")
 	private String bezeichnung = "";
 	
-	@NotNull(message = "{artikelverwaltung.artikel.preis.notNull}")
 	private double preis;
 	
 	private boolean ausgesondert;
-	
+
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date aktualisiert;
 	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 	
-	public void setValues(Artikel a) {
-		bezeichnung = a.bezeichnung;
-		preis = a.preis;
-		ausgesondert = a.ausgesondert;
-	}
-	
+
+
 	public Artikel() {
 		super();
 	}
 	
-	public Artikel(String bezeichnung, double preis) {
+	public Artikel(String bezeichnung, double preis, boolean ausgesondert) {
 		super();
 		this.bezeichnung = bezeichnung;
 		this.preis = preis;
+		this.ausgesondert = ausgesondert;
 	}
 
 	@PrePersist
 	private void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
+
 	}
 	
 	@PostPersist
@@ -137,7 +141,9 @@ public class Artikel implements Serializable {
 	
 	@PreUpdate
 	private void preUpdate() {
+		erzeugt = new Date();
 		aktualisiert = new Date();
+		
 	}
 
 	public Long getId() {
@@ -186,6 +192,15 @@ public class Artikel implements Serializable {
 
 	public void setAktualisiert(Date aktualisiert) {
 		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+	}
+	
+	public void setValues(Artikel a) {
+		bezeichnung = a.bezeichnung;
+		preis = a.preis;
+		ausgesondert = a.ausgesondert;
+		erzeugt = a.erzeugt;
+		aktualisiert = a.aktualisiert;
+		
 	}
 
 	@Override
@@ -236,10 +251,16 @@ public class Artikel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Artikel [id=" + id + ", bezeichnung=" + bezeichnung
-		       + ", preis=" + preis + ", ausgesondert=" + ausgesondert
-		       + ", erzeugt=" + erzeugt
-			   + ", aktualisiert=" + aktualisiert + "]";
+		return "Artikel [id=" + id + ", version=" + version
+		       + ", bezeichnung=" + bezeichnung + ", ausgesondert=" + ausgesondert + "]";
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }
