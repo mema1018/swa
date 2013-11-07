@@ -60,7 +60,6 @@ import de.shop.bestellverwaltung.rest.UriHelperBestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
-import de.shop.kundenverwaltung.domain.Privatkunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.LocaleHelper;
@@ -150,17 +149,17 @@ public class KundeResource {
 		return uriHelper.getUri(KundeResource.class, "findKundeById", kunde.getId(), uriInfo);
 	}
 //	
-//	private URI getUriBestellungen(AbstractKunde kunde, UriInfo uriInfo) {
-//		return uriHelper.getUri(KundeResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
-//	}
-//	
-//	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
-//		// URI fuer Bestellungen setzen
-//		final URI uri = getUriBestellungen(kunde, uriInfo);
-//		kunde.setBestellungenUri(uri);
-//		
-//		LOGGER.trace(kunde);
-//	}
+	private URI getUriBestellungen(AbstractKunde kunde, UriInfo uriInfo) {
+		return uriHelper.getUri(KundeResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
+	}
+	
+	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
+		// URI fuer Bestellungen setzen
+		final URI uri = getUriBestellungen(kunde, uriInfo);
+		kunde.setBestellungenUri(uri);
+		
+		LOGGER.trace(kunde);
+	}
 //	
 //	private Link[] getTransitionalLinksKunden(List<? extends AbstractKunde> kunden, UriInfo uriInfo) {
 //		if (kunden == null || kunden.isEmpty()) {

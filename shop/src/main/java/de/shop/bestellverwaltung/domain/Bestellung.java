@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -86,6 +88,7 @@ public class Bestellung implements Serializable {
 	public static final String PARAM_KUNDE = "kunde";
 	public static final String PARAM_ID = "id";
 	
+	public static final int ERSTE_VERSION = 0;
 	
 
 	@Id
@@ -93,6 +96,10 @@ public class Bestellung implements Serializable {
 	@Column(nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
@@ -120,6 +127,8 @@ public class Bestellung implements Serializable {
 	@Transient
 	@XmlTransient
 	private URI lieferungenUri;
+	
+	
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -247,6 +256,13 @@ public class Bestellung implements Serializable {
 	public void setLieferungenUri(URI lieferungenUri) {
 		this.lieferungenUri = lieferungenUri;
 	}
+//	public int getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(int version) {
+//		this.version = version;
+//	}
 
 // Datum Get-Set
 	@JsonProperty("datum")

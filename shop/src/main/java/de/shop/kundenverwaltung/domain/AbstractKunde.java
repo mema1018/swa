@@ -6,6 +6,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static javax.persistence.FetchType.EAGER;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -14,13 +15,19 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,8 +43,11 @@ import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
+import javax.persistence.Basic;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -46,6 +56,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -58,6 +69,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
+import de.shop.auth.domain.RolleType;
 
 
 // Alternativen bei @Inheritance
@@ -184,12 +196,18 @@ public abstract class AbstractKunde implements Serializable {
 	public static final String PARAM_KUNDE_USERNAME = "username";
 	public static final String PARAM_KUNDE_SEIT = "seit";
 	public static final String PARAM_KUNDE_EMAIL = "email";
+	
+	public static final int ERSTE_VERSION = 0;
 
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	@Column(length = NACHNAME_LENGTH_MAX)
 	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
@@ -243,7 +261,7 @@ public abstract class AbstractKunde implements Serializable {
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	@OrderColumn(name = "idx", nullable = false)
-	@JsonIgnore
+	@XmlTransient
 	private List<Bestellung> bestellungen;
 	
 	@Transient
@@ -252,18 +270,31 @@ public abstract class AbstractKunde implements Serializable {
 	@OneToMany
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	@OrderColumn(name = "idx", nullable = false)
-	@JsonIgnore
+	@XmlTransient
 	private List<Wartungsvertrag> wartungsvertraege;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date erzeugt;
 
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date aktualisiert;
+	
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(name = "kunde_rolle",
+	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
+   	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "rolle" }))
+	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
+	private Set<RolleType> rollen;
+	
+//	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
+//	@JoinColumn(name = "file_fk")
+//	@XmlTransient
+//	private File file;
+	
 
 	@PrePersist
 	protected void prePersist() {
@@ -312,6 +343,13 @@ public abstract class AbstractKunde implements Serializable {
 		this.id = id;
 	}
 
+//	public int getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(int version) {
+//		this.version = version;
+//	}
 	public String getNachname() {
 		return nachname;
 	}
@@ -437,6 +475,34 @@ public abstract class AbstractKunde implements Serializable {
 		bestellungen.add(bestellung);
 		return this;
 	}
+	
+	
+	
+	public void setRollen(Set<RolleType> rollen) {
+		if (this.rollen == null) {
+			this.rollen = rollen;
+			return;
+		}
+		
+		// Wiederverwendung der vorhandenen Collection
+		this.rollen.clear();
+		if (rollen != null) {
+			this.rollen.addAll(rollen);
+		}
+	}
+	
+	
+	
+	public AbstractKunde addRollen(Collection<RolleType> rollen) {
+		LOGGER.tracef("neue Rollen: %s", rollen);
+		if (this.rollen == null) {
+			this.rollen = new HashSet<>();
+		}
+		this.rollen.addAll(rollen);
+		LOGGER.tracef("Rollen nachher: %s", this.rollen);
+		return this;
+	}
+	
 	
 	public URI getBestellungenUri() {
 		return bestellungenUri;

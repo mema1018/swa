@@ -8,7 +8,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -41,12 +40,10 @@ import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
 import static de.shop.util.Constants.SELF_LINK;
 import static de.shop.util.Constants.ADD_LINK;
-import static de.shop.util.Constants.UPDATE_LINK;
-import static de.shop.util.Constants.REMOVE_LINK;
+
 
 //import de.shop.bestellverwaltung.domain.Lieferung;
 
@@ -54,8 +51,6 @@ import static de.shop.util.Constants.REMOVE_LINK;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.rest.KundeResource;
-import de.shop.kundenverwaltung.rest.UriHelperKunde;
-import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
@@ -92,17 +87,10 @@ public class BestellungResource {
 	@Inject
 	private ArtikelResource artikelResource;
 	
-	@Inject
-	private UriHelperBestellung uriHelperBestellung;
-	
-	@Inject
-	private UriHelperKunde uriHelperKunde;
 	
 	@Inject
 	private UriHelper uriHelper;
 	
-	@Inject
-	private LocaleHelper localeHelper;
 	
 	@Inject
 	private Principal principal;
@@ -214,6 +202,7 @@ public class BestellungResource {
 			throw new NotFoundException(msg);
 		}
 
+		kundeResource.setStructuralLinks(kunde, uriInfo);
 		// URLs innerhalb der gefundenen Bestellung anpassen
 		return Response.ok(kunde)
                 .links(kundeResource.getTransitionalLinks(kunde, uriInfo))
