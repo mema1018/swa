@@ -18,13 +18,12 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-//import javax.ws.rs.PUT;
+
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-//import javax.ws.rs.WebApplicationException;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -45,7 +44,6 @@ import static de.shop.util.Constants.SELF_LINK;
 import static de.shop.util.Constants.ADD_LINK;
 
 
-//import de.shop.bestellverwaltung.domain.Lieferung;
 
 
 import de.shop.bestellverwaltung.service.BestellungService;
@@ -313,7 +311,7 @@ public class BestellungResource {
 //	        final Locale locale = localeHelper.getLocale(headers);
 //	        final Bestellung orginalBestellung = bs.findBestellungById(bestellung.getId());
 //	        if (orginalBestellung == null) {
-//	            // TODO msg passend zu locale
+//	           
 //	            final String msg = "Keine Bestellung gefunden mit der ID " + bestellung.getId();
 //	            throw new NotFoundException(msg);
 //	        }
@@ -326,7 +324,7 @@ public class BestellungResource {
 //	        // Update durchfuehren
 //	        bestellung = bs.updateBestellung(orginalBestellung, locale);
 //	        if (bestellung == null) {
-//	            // TODO msg passend zu locale
+//	            
 //	            final String msg = "Keine Bestellung gefunden mit der ID " + orginalBestellung.getId();
 //	            throw new NotFoundException(msg);
 //	        }

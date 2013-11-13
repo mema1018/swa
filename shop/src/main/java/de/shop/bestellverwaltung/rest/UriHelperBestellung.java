@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-
 import de.shop.artikelverwaltung.rest.UriHelperArtikel;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
@@ -60,4 +59,6 @@ public class UriHelperBestellung {
 		final URI uri = ub.build(bestellung.getId());
 		return uri;
 	}
+	
+
 }

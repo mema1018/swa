@@ -26,9 +26,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
-
-
-
 import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
@@ -116,13 +113,13 @@ public class Adresse implements Serializable {
 		this.id = id;
 	}
 	
-//	public int getVersion() {
-//		return version;
-//	}
-//
-//	public void setVersion(int version) {
-//		this.version = version;
-//	}
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 	public String getPlz() {
 		return plz;

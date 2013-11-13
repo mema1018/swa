@@ -10,6 +10,7 @@ import java.util.Date;
 
 
 
+
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
@@ -91,9 +93,11 @@ public class Artikel implements Serializable {
 
 	
 	@Column(length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
+	@NotEmpty(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
 	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
 	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
 	private String bezeichnung = "";
+	
 	
 	private double preis;
 	

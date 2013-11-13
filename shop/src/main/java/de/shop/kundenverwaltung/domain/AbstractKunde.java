@@ -24,6 +24,9 @@ import java.util.Locale;
 import java.util.Set;
 
 
+
+
+import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -47,7 +50,6 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.persistence.Basic;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -69,6 +71,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
+import de.shop.util.persistence.File;
 import de.shop.auth.domain.RolleType;
 
 
@@ -290,10 +293,11 @@ public abstract class AbstractKunde implements Serializable {
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
 	private Set<RolleType> rollen;
 	
-//	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
-//	@JoinColumn(name = "file_fk")
-//	@XmlTransient
-//	private File file;
+
+	@OneToOne(cascade = { PERSIST, REMOVE })
+	@JoinColumn(name = "file_fk")
+	@XmlTransient
+	private File file;
 	
 
 	@PrePersist
@@ -343,13 +347,21 @@ public abstract class AbstractKunde implements Serializable {
 		this.id = id;
 	}
 
-//	public int getVersion() {
-//		return version;
-//	}
-//
-//	public void setVersion(int version) {
-//		this.version = version;
-//	}
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
 	public String getNachname() {
 		return nachname;
 	}
@@ -603,4 +615,23 @@ public abstract class AbstractKunde implements Serializable {
 		
 		return true;
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		final AbstractKunde neuesObjekt = AbstractKunde.class.cast(super.clone());
+		neuesObjekt.id = id;
+		neuesObjekt.version = version;
+		neuesObjekt.nachname = nachname;
+		neuesObjekt.vorname = vorname;
+		neuesObjekt.umsatz = umsatz;
+		neuesObjekt.email = email;
+		neuesObjekt.newsletter = newsletter;
+		neuesObjekt.password = password;
+		neuesObjekt.passwordWdh = passwordWdh;
+		neuesObjekt.adresse = adresse;
+		neuesObjekt.erzeugt = erzeugt;
+		neuesObjekt.aktualisiert = aktualisiert;
+		return neuesObjekt;
+	}
+
+	
 }
