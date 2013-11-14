@@ -26,6 +26,7 @@ import java.util.Set;
 
 
 
+
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -202,6 +203,7 @@ public abstract class AbstractKunde implements Serializable {
 	
 	public static final int ERSTE_VERSION = 0;
 
+
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
@@ -244,7 +246,7 @@ public abstract class AbstractKunde implements Serializable {
 	private String password;
 	
 	@Transient
-	@JsonIgnore
+	@XmlTransient
 	private String passwordWdh;
 	
 //	@AssertTrue(groups = PasswordGroup.class, message = "{kundenverwaltung.kunde.password.notEqual}")

@@ -37,6 +37,7 @@ import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.artikelverwaltung.service.InvalidArtikelIdException;
 import de.shop.util.Log;
+import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
 
 
@@ -47,7 +48,7 @@ import de.shop.util.UriHelper;
 @RequestScoped
 public class ArtikelResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+	private static final String NOT_FOUND_ID = "artikel.notFound.id";
 	@Context
 	private UriInfo uriInfo;
 	
@@ -76,7 +77,7 @@ public class ArtikelResource {
 		final Artikel artikel = as.findArtikelById(id);
 		if (artikel == null) {
 			
-			throw new InvalidArtikelIdException(id);
+			throw new NotFoundException(NOT_FOUND_ID, id);
 		}
 
 		return Response.ok(artikel)
@@ -136,7 +137,7 @@ public class ArtikelResource {
 	        final Artikel orginalArtikel = as.findArtikelById(artikel.getId());
 	        if (orginalArtikel == null) {
 	        	
-	        	throw new InvalidArtikelIdException(artikel.getId());
+	        	throw new NotFoundException(NOT_FOUND_ID,artikel.getId());
 
 	        }
 	        LOGGER.tracef("Artikel vorher: %s", orginalArtikel);
@@ -148,7 +149,8 @@ public class ArtikelResource {
 	        // Update durchfuehren
 	        artikel = as.updateArtikel(orginalArtikel);
 	        
-			return Response.noContent().build();
+	        artikel = as.findArtikelById(artikel.getId());
+			return Response.ok(artikel).build();
 				 
 	   }
 }

@@ -18,13 +18,10 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-
-
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-
-
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
@@ -47,6 +44,7 @@ import static de.shop.util.Constants.ADD_LINK;
 
 
 import de.shop.bestellverwaltung.service.BestellungService;
+import de.shop.bestellverwaltung.service.InvalidBestellungIdException;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.rest.KundeResource;
 import de.shop.util.Log;
@@ -58,12 +56,13 @@ import de.shop.util.UriHelper;
 @Path("/bestellungen")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
-@RequestScoped
 @Log
+@RequestScoped
 public class BestellungResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	private static final String NOT_FOUND_USERNAME = "bestellung.notFound.username";
 	private static final String NOT_FOUND_ID_ARTIKEL = "artikel.notFound.id";
+	private static final String NOT_FOUND_ID = "bestellung.notFound.id";
 	
 	
 
@@ -113,8 +112,8 @@ public class BestellungResource {
 	public Response findBestellungById(@PathParam("id") Long id) {
 		final Bestellung bestellung = bs.findBestellungById(id);
 		if (bestellung == null) {
-			final String msg = "Keine Bestellung gefunden mit der ID " + id;
-			throw new NotFoundException(msg);
+			
+			throw new NotFoundException(NOT_FOUND_ID, id);
 		}
 		setStructuralLinks(bestellung, uriInfo);
 		// URLs innerhalb der gefundenen Bestellung anpassen
@@ -303,30 +302,31 @@ public class BestellungResource {
 				       .build();
 	}
 	
-//	 @PUT
-//	    @Consumes(APPLICATION_JSON)
-//	    @Produces
-//	    public void updateBestellung(Bestellung bestellung) {
-//	        // Vorhandenen Artikel ermitteln
-//	        final Locale locale = localeHelper.getLocale(headers);
-//	        final Bestellung orginalBestellung = bs.findBestellungById(bestellung.getId());
-//	        if (orginalBestellung == null) {
-//	           
-//	            final String msg = "Keine Bestellung gefunden mit der ID " + bestellung.getId();
-//	            throw new NotFoundException(msg);
-//	        }
-//	        LOGGER.tracef("Artikel vorher: %s", orginalBestellung);
-//	    
-//	        // Daten des vorhandenen Bestellung ueberschreiben
-//	        orginalBestellung.setValues(bestellung);
-//	        LOGGER.tracef("Kunde nachher: %s", orginalBestellung);
-//	        
-//	        // Update durchfuehren
-//	        bestellung = bs.updateBestellung(orginalBestellung, locale);
-//	        if (bestellung == null) {
-//	            
-//	            final String msg = "Keine Bestellung gefunden mit der ID " + orginalBestellung.getId();
-//	            throw new NotFoundException(msg);
-//	        }
-//	   }
+	    @PUT
+	    @Consumes(APPLICATION_JSON)
+	    @Produces
+	    public Response updateBestellung(Bestellung bestellung) {
+	        // Vorhandenen Artikel ermitteln
+	        final Bestellung orginalBestellung = bs.findBestellungById(bestellung.getId());
+	        if (orginalBestellung == null) {
+	           
+	            final String msg = "Keine Bestellung gefunden mit der ID " + bestellung.getId();
+	            throw new NotFoundException(msg);
+	        }
+	        LOGGER.tracef("Artikel vorher: %s", orginalBestellung);
+	    
+	        // Daten des vorhandenen Bestellung ueberschreiben
+	        orginalBestellung.setValues(bestellung);
+	        LOGGER.tracef("Kunde nachher: %s", orginalBestellung);
+	        
+	        // Update durchfuehren
+	        bestellung = bs.updateBestellung(orginalBestellung);
+	        if (bestellung == null) {
+	            
+	            final String msg = "Keine Bestellung gefunden mit der ID " + orginalBestellung.getId();
+	            throw new NotFoundException(msg);
+	        }
+	        
+	        return Response.ok(bestellung).build();
+	   }
 }

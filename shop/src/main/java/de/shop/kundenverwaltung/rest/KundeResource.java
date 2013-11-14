@@ -22,6 +22,7 @@ import static de.shop.util.Constants.LAST_LINK;
 
 
 
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 //import java.util.List;
 import java.util.Locale;
+
 
 
 
@@ -69,6 +71,7 @@ import static de.shop.util.Constants.UPDATE_LINK;
 import static de.shop.util.Constants.LIST_LINK;
 
 
+import de.shop.auth.service.AuthService;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.rest.UriHelperBestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
@@ -76,7 +79,6 @@ import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
-import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
@@ -94,7 +96,7 @@ public class KundeResource {
 	public static final String KUNDEN_ID_PATH_PARAM = "id";
 	private static final String NOT_FOUND_ID = "kunde.notFound.id";
 	private static final String NOT_FOUND_FILE = "kunde.notFound.File";
-
+	private  static final AuthService as = new AuthService();
     @Context
     private UriInfo uriInfo;
     
@@ -116,8 +118,7 @@ public class KundeResource {
 	@Inject
 	private UriHelperBestellung uriHelperBestellung;
 	
-	@Inject
-	private LocaleHelper localeHelper;
+
 	
 	@PostConstruct
 	private void postConstruct() {
@@ -230,8 +231,8 @@ public class KundeResource {
 			}
 		}
 		else {
-			final Locale locale = localeHelper.getLocale(headers);
-			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE, locale);
+
+			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE);
 			if (kunden.isEmpty()) {
 				final String msg = "Kein Kunde gefunden mit Nachname " + nachname;
 				throw new NotFoundException(msg);
@@ -253,15 +254,7 @@ public class KundeResource {
 		final Collection<Long> ids = ks.findIdsByPrefix(idPrefix);
 		return ids;
 	}
-	
-	@GET
-	@Path("/prefix/nachname/{nachname}")
-	public Collection<String> findNachnamenByPrefix(@PathParam("nachname") String nachnamePrefix) {
-		final Collection<String> nachnamen = ks.findNachnamenByPrefix(nachnamePrefix);
-		return nachnamen;
-	}
-	
-	
+		
 	/**
 	 * Mit der URL /kunden/{id}/bestellungen die Bestellungen zu eine Kunden ermitteln
 	 * @param kundeId ID des Kunden
@@ -319,6 +312,7 @@ public class KundeResource {
 	@Transactional
 	public Response createKunde(@Valid AbstractKunde kunde) {
 		kunde.setId(KEINE_ID);
+		kunde.setPassword(as.verschluesseln(kunde.getPassword()));
 		final Adresse adresse = kunde.getAdresse();
 		if (adresse != null) {
 			adresse.setKunde(kunde);
@@ -340,11 +334,10 @@ public class KundeResource {
 	 * Mit der URL /kunden einen Kunden per PUT aktualisieren
 	 * @param kunde zu aktualisierende Daten des Kunden
 	 */
-	
+	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Transactional
-	@PUT
 	public Response updateKunde(@Valid AbstractKunde kunde) {
 		// Vorhandenen Kunden ermitteln
 		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
