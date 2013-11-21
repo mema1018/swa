@@ -7,38 +7,11 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.FIRST_LINK;
 import static de.shop.util.Constants.LAST_LINK;
-//import static de.shop.util.Constants.ADD_LINK;
-//import static de.shop.util.Constants.FIRST_LINK;
-//import static de.shop.util.Constants.KEINE_ID;
-//import static de.shop.util.Constants.LAST_LINK;
-//import static de.shop.util.Constants.LIST_LINK;
-//import static de.shop.util.Constants.REMOVE_LINK;
-//import static de.shop.util.Constants.SELF_LINK;
-//import static de.shop.util.Constants.UPDATE_LINK;
-
-
-
-
-
-
-
-
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-//import java.util.List;
-import java.util.Locale;
-
-
-
-
-
-
-
-
-//import javax.ws.rs.core.Link;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
@@ -46,7 +19,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
-//import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -82,7 +54,6 @@ import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
-//import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.util.persistence.File;
 
 @Path("/kunde")
@@ -96,6 +67,10 @@ public class KundeResource {
 	public static final String KUNDEN_ID_PATH_PARAM = "id";
 	private static final String NOT_FOUND_ID = "kunde.notFound.id";
 	private static final String NOT_FOUND_FILE = "kunde.notFound.File";
+	private static final String NOT_FOUND_NACHNAME = "kunde.notFound.nachname";
+	private static final String NO_UPDATE = "kunde.noUpdate";
+	public static final String KUNDEN_NACHNAME_QUERY_PARAM = "nachname";
+	public static final String KUNDEN_GESCHLECHT_QUERY_PARAM = "geschlecht";
 	private  static final AuthService as = new AuthService();
     @Context
     private UriInfo uriInfo;
@@ -226,16 +201,14 @@ public class KundeResource {
 		if ("".equals(nachname)) {
 			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, null);
 			if (kunden.isEmpty()) {
-				final String msg = "Keine Kunden vorhanden";
-				throw new NotFoundException(msg);
+				throw new NotFoundException(NOT_FOUND_NACHNAME, nachname);
 			}
 		}
 		else {
 
 			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE);
 			if (kunden.isEmpty()) {
-				final String msg = "Kein Kunde gefunden mit Nachname " + nachname;
-				throw new NotFoundException(msg);
+				throw new NotFoundException(NOT_FOUND_NACHNAME, nachname);
 			}
 		}
 		
@@ -333,17 +306,19 @@ public class KundeResource {
 	/**
 	 * Mit der URL /kunden einen Kunden per PUT aktualisieren
 	 * @param kunde zu aktualisierende Daten des Kunden
+	 * @throws Exception 
 	 */
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Transactional
-	public Response updateKunde(@Valid AbstractKunde kunde) {
+	public Response updateKunde(@Valid AbstractKunde kunde) throws Exception {
 		// Vorhandenen Kunden ermitteln
 		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
 		if (origKunde == null) {
 			throw new NotFoundException(NOT_FOUND_ID, kunde.getId());
 		}
+		
 		LOGGER.tracef("Kunde vorher = %s", origKunde);
 	
 		// Daten des vorhandenen Kunden ueberschreiben
@@ -358,6 +333,8 @@ public class KundeResource {
 				       .links(getTransitionalLinks(kunde, uriInfo))
 				       .build();
 	}
+	
+	
 	@Path("{id:[1-9][0-9]*}/file")
 	@POST
 	@Consumes({ "image/jpeg", "image/pjpeg", "image/png" })  

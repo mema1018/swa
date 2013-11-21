@@ -236,7 +236,7 @@ public abstract class AbstractKunde implements Serializable {
 	private BigDecimal umsatz;
 	
 	@Column(length = EMAIL_LENGTH_MAX, nullable = false, unique = true)
-	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
+	@Email(message = "{kundenverwaltung.kunde.email}")
 	private String email;
 	
 	@Column(nullable = false)
@@ -325,6 +325,7 @@ public abstract class AbstractKunde implements Serializable {
 	}
 	
 	public void setValues(AbstractKunde k) {
+		version = k.version;
 		nachname = k.nachname;
 		vorname = k.vorname;
 		umsatz = k.umsatz;
@@ -571,7 +572,7 @@ public abstract class AbstractKunde implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AbstractKunde [id=" + id
+		return "AbstractKunde [id=" + id + ", version=" + version
 			   + ", nachname=" + nachname + ", vorname=" + vorname
 			   + ", seit=" + getSeitAsString(DateFormat.MEDIUM, Locale.GERMANY)
 			   + ", umsatz=" + umsatz

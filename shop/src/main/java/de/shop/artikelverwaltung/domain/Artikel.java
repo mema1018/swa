@@ -198,6 +198,7 @@ public class Artikel implements Serializable {
 	}
 	
 	public void setValues(Artikel a) {
+		version = a.version;
 		bezeichnung = a.bezeichnung;
 		preis = a.preis;
 		ausgesondert = a.ausgesondert;

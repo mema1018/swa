@@ -75,7 +75,6 @@ public class Adresse implements Serializable {
 
 	@OneToOne
 	@JoinColumn(name = "kunde_fk", nullable = false)
-	//@NotNull(message = "{kundenverwaltung.adresse.kunde.notNull}")
 	@XmlTransient
 	private AbstractKunde kunde;
 
