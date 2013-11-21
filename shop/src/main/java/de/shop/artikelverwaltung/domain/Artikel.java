@@ -35,7 +35,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
-//Test Push
 
 
 @Entity
