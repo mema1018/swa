@@ -44,7 +44,6 @@ import static de.shop.util.Constants.ADD_LINK;
 
 
 import de.shop.bestellverwaltung.service.BestellungService;
-import de.shop.bestellverwaltung.service.InvalidBestellungIdException;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.rest.KundeResource;
 import de.shop.util.Log;
@@ -63,7 +62,7 @@ public class BestellungResource {
 	private static final String NOT_FOUND_USERNAME = "bestellung.notFound.username";
 	private static final String NOT_FOUND_ID_ARTIKEL = "artikel.notFound.id";
 	private static final String NOT_FOUND_ID = "bestellung.notFound.id";
-	
+	private static final String NOT_FOUND_ID_KUNDE = "kunde.notFound.bestellung.id";
 	
 
 	@Context
@@ -195,8 +194,7 @@ public class BestellungResource {
 	public Response findKundeByBestellungId(@PathParam("id") Long id) {
 		final AbstractKunde kunde = bs.findKundeById(id);
 		if (kunde == null) {
-			final String msg = "Keine Bestellung gefunden mit der ID " + id;
-			throw new NotFoundException(msg);
+			throw new NotFoundException(NOT_FOUND_ID_KUNDE, id);
 		}
 
 		kundeResource.setStructuralLinks(kunde, uriInfo);
@@ -214,6 +212,7 @@ public class BestellungResource {
 	 */
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
 	@Transactional
 	public Response createBestellung(@Valid Bestellung bestellung) {
 		if (bestellung == null) {
@@ -302,10 +301,11 @@ public class BestellungResource {
 				       .build();
 	}
 	
-	    @PUT
-	    @Consumes(APPLICATION_JSON)
-	    @Produces
-	    public Response updateBestellung(Bestellung bestellung) {
+    @PUT
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Transactional
+	    public Response updateBestellung(@Valid Bestellung bestellung) {
 	        // Vorhandenen Artikel ermitteln
 	        final Bestellung orginalBestellung = bs.findBestellungById(bestellung.getId());
 	        if (orginalBestellung == null) {

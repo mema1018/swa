@@ -7,7 +7,6 @@ import static de.shop.util.Constants.SELF_LINK;
 import static de.shop.util.Constants.ADD_LINK;
 import static de.shop.util.Constants.UPDATE_LINK;
 import static de.shop.util.Constants.KEINE_ID;
-import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
@@ -117,7 +116,6 @@ public class ArtikelResource {
 	public Response createArtikel(@Valid Artikel artikel) {
 		
 		artikel.setId(KEINE_ID);
-		artikel.setVersion(ERSTE_VERSION);
 		LOGGER.tracef("Artikel: %s", artikel);
 		artikel = as.createArtikel(artikel);
 		LOGGER.tracef("Angelegt Artikel: ", artikel);		

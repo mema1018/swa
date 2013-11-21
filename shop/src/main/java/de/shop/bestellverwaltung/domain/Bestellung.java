@@ -43,7 +43,6 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
@@ -241,7 +240,7 @@ public class Bestellung implements Serializable {
 		lieferungen.add(lieferung);
 	}
 	
-	@JsonIgnore
+	@XmlTransient
 	public List<Lieferung> getLieferungenAsList() {
 		return lieferungen == null ? null : new ArrayList<>(lieferungen);
 	}
@@ -256,13 +255,13 @@ public class Bestellung implements Serializable {
 	public void setLieferungenUri(URI lieferungenUri) {
 		this.lieferungenUri = lieferungenUri;
 	}
-//	public int getVersion() {
-//		return version;
-//	}
-//
-//	public void setVersion(int version) {
-//		this.version = version;
-//	}
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
 // Datum Get-Set
 	@JsonProperty("datum")
@@ -290,7 +289,7 @@ public class Bestellung implements Serializable {
 	}
 
 	public void setValues(Bestellung b) {
-		
+		version = b.version;
 		erzeugt = b.erzeugt;
 		aktualisiert = b.aktualisiert;
 		
