@@ -10,24 +10,22 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import de.shop.util.Log;
-
 
 @Provider
 @Log
-public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
+public class NotFoundExceptionMapper implements
+		ExceptionMapper<NotFoundException> {
 	@Context
 	private HttpHeaders headers;
-	
+
 	@Inject
 	private Messages messages;
-	
+
 	@Override
 	public Response toResponse(NotFoundException e) {
-		final String msg = messages.getMessage(headers, e.getMessage(), e.getArgs());
-		return Response.status(NOT_FOUND)
-		               .type(TEXT_PLAIN)
-		               .entity(msg)
-		               .build();
+		final String msg = messages.getMessage(headers, e.getMessage(),
+				e.getArgs());
+		return Response.status(NOT_FOUND).type(TEXT_PLAIN).entity(msg).build();
 	}
+	
 }

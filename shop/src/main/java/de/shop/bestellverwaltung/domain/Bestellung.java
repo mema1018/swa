@@ -1,4 +1,5 @@
 package de.shop.bestellverwaltung.domain;
+
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.CascadeType.PERSIST;
@@ -55,47 +56,46 @@ import de.shop.util.PreExistingGroup;
 @Entity
 @Table(name = "bestellung", indexes = @Index(columnList = "kunde_fk"))
 @NamedQueries({
-	@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
-                query = "SELECT b"
-			            + " FROM   Bestellung b"
-						+ " WHERE  b.kunde = :" + Bestellung.PARAM_KUNDE),
-   	@NamedQuery(name  = Bestellung.FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN,
-			    query = "SELECT DISTINCT b"
-                        + " FROM   Bestellung b LEFT JOIN FETCH b.lieferungen"
-   			            + " WHERE  b.id = :" + Bestellung.PARAM_ID),
-	@NamedQuery(name  = Bestellung.FIND_KUNDE_BY_ID,
- 			    query = "SELECT b.kunde"
-                        + " FROM   Bestellung b"
-  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID),
-	@NamedQuery(name  = Bestellung.FIND_BESTELLUNG_BY_ID,
-	    		query = "SELECT b"
-	    				+ " FROM   Bestellung b"
-	    				+ " WHERE  b.id = :" + Bestellung.PARAM_ID
-	    				+ " ORDER BY b.id ASC")
-})
+		@NamedQuery(name = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, query = "SELECT b"
+				+ " FROM   Bestellung b"
+				+ " WHERE  b.kunde = :"
+				+ Bestellung.PARAM_KUNDE),
+		@NamedQuery(name = Bestellung.FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN, query = "SELECT DISTINCT b"
+				+ " FROM   Bestellung b LEFT JOIN FETCH b.lieferungen"
+				+ " WHERE  b.id = :" + Bestellung.PARAM_ID),
+		@NamedQuery(name = Bestellung.FIND_KUNDE_BY_ID, query = "SELECT b.kunde"
+				+ " FROM   Bestellung b"
+				+ " WHERE  b.id = :"
+				+ Bestellung.PARAM_ID),
+		@NamedQuery(name = Bestellung.FIND_BESTELLUNG_BY_ID, query = "SELECT b"
+				+ " FROM   Bestellung b" + " WHERE  b.id = :"
+				+ Bestellung.PARAM_ID + " ORDER BY b.id ASC") })
 @XmlRootElement
 public class Bestellung implements Serializable {
 	private static final long serialVersionUID = 7560752199018702446L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
+
 	private static final String PREFIX = "Bestellung.";
-	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
-	public static final String FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN =
-		                       PREFIX + "findBestellungenByIdFetchLieferungen";
-	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
-	public static final String FIND_BESTELLUNG_BY_ID = PREFIX + "findBestellungById";
+	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX
+			+ "findBestellungenByKunde";
+	public static final String FIND_BESTELLUNG_BY_ID_FETCH_LIEFERUNGEN = PREFIX
+			+ "findBestellungenByIdFetchLieferungen";
+	public static final String FIND_KUNDE_BY_ID = PREFIX
+			+ "findBestellungKundeById";
+	public static final String FIND_BESTELLUNG_BY_ID = PREFIX
+			+ "findBestellungById";
 	public static final String PARAM_KUNDE = "kunde";
 	public static final String PARAM_ID = "id";
-	
+
 	public static final int ERSTE_VERSION = 0;
-	
 
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
-	
+
 	@Version
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
@@ -105,7 +105,7 @@ public class Bestellung implements Serializable {
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}", groups = PreExistingGroup.class)
 	@XmlTransient
 	private AbstractKunde kunde;
-	
+
 	@Transient
 	private URI kundeUri;
 
@@ -115,20 +115,17 @@ public class Bestellung implements Serializable {
 	@NotEmpty(message = "{bestellverwaltung.bestellung.bestellpositionen.notEmpty}")
 	@Valid
 	private List<Bestellposition> bestellpositionen;
-	
+
 	@ManyToMany
-	@JoinTable(name = "bestellung_lieferung",
-			   joinColumns = @JoinColumn(name = "bestellung_fk"),
-			                 inverseJoinColumns = @JoinColumn(name = "lieferung_fk"))
+	@JoinTable(name = "bestellung_lieferung", joinColumns = @JoinColumn(name = "bestellung_fk"), 
+	inverseJoinColumns = @JoinColumn(name = "lieferung_fk"))
 	@XmlTransient
 	private Set<Lieferung> lieferungen;
-	
+
 	@Transient
 	@XmlTransient
 	private URI lieferungenUri;
-	
-	
-	
+
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@XmlTransient
@@ -142,7 +139,7 @@ public class Bestellung implements Serializable {
 	public Bestellung() {
 		super();
 	}
-	
+
 	public Bestellung(List<Bestellposition> bestellpositionen) {
 		super();
 		this.bestellpositionen = bestellpositionen;
@@ -153,21 +150,23 @@ public class Bestellung implements Serializable {
 		erzeugt = new Date();
 		aktualisiert = new Date();
 	}
-	
+
 	@PostPersist
 	private void postPersist() {
 		LOGGER.debugf("Neue Bestellung mit ID=%d", id);
 	}
-	
+
 	@PreUpdate
 	private void preUpdate() {
 		aktualisiert = new Date();
 		erzeugt = new Date();
 	}
-// Get-Set Methoden
+
+	// Get-Set Methoden
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -176,23 +175,23 @@ public class Bestellung implements Serializable {
 		if (bestellpositionen == null) {
 			return null;
 		}
-		
+
 		return Collections.unmodifiableList(bestellpositionen);
 	}
-	
+
 	public void setBestellpositionen(List<Bestellposition> bestellpositionen) {
 		if (this.bestellpositionen == null) {
 			this.bestellpositionen = bestellpositionen;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection(Liste)
 		this.bestellpositionen.clear();
 		if (bestellpositionen != null) {
 			this.bestellpositionen.addAll(bestellpositionen);
 		}
 	}
-	
+
 	public Bestellung addBestellposition(Bestellposition bestellposition) {
 		if (bestellpositionen == null) {
 			bestellpositionen = new ArrayList<>();
@@ -204,57 +203,62 @@ public class Bestellung implements Serializable {
 	public AbstractKunde getKunde() {
 		return kunde;
 	}
+
 	public void setKunde(AbstractKunde kunde) {
 		this.kunde = kunde;
 	}
-	
+
 	public URI getKundeUri() {
 		return kundeUri;
 	}
-	
+
 	public void setKundeUri(URI kundeUri) {
 		this.kundeUri = kundeUri;
 	}
 
 	public Set<Lieferung> getLieferungen() {
-		return lieferungen == null ? null : Collections.unmodifiableSet(lieferungen);
+		return lieferungen == null ? null : Collections
+				.unmodifiableSet(lieferungen);
 	}
-	
+
 	public void setLieferungen(Set<Lieferung> lieferungen) {
 		if (this.lieferungen == null) {
 			this.lieferungen = lieferungen;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection
 		this.lieferungen.clear();
 		if (lieferungen != null) {
 			this.lieferungen.addAll(lieferungen);
 		}
 	}
-	
+
 	public void addLieferung(Lieferung lieferung) {
 		if (lieferungen == null) {
 			lieferungen = new HashSet<>();
 		}
 		lieferungen.add(lieferung);
 	}
-	
+
 	@XmlTransient
 	public List<Lieferung> getLieferungenAsList() {
 		return lieferungen == null ? null : new ArrayList<>(lieferungen);
 	}
 
 	public void setLieferungenAsList(List<Lieferung> lieferungen) {
-		this.lieferungen = lieferungen == null ? null : new HashSet<>(lieferungen);
+		this.lieferungen = lieferungen == null ? null : new HashSet<>(
+				lieferungen);
 	}
-	
+
 	public URI getLieferungenUri() {
 		return lieferungenUri;
 	}
+
 	public void setLieferungenUri(URI lieferungenUri) {
 		this.lieferungenUri = lieferungenUri;
 	}
+
 	public int getVersion() {
 		return version;
 	}
@@ -263,36 +267,39 @@ public class Bestellung implements Serializable {
 		this.version = version;
 	}
 
-// Datum Get-Set
+	// Datum Get-Set
 	@JsonProperty("datum")
 	public Date getErzeugt() {
 		return erzeugt == null ? null : (Date) erzeugt.clone();
 	}
+
 	public void setErzeugt(Date erzeugt) {
 		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
 	}
+
 	public Date getAktualisiert() {
 		return aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
+
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert
+				.clone();
 	}
 
-//Object Methoden
+	// Object Methoden
 	@Override
 	public String toString() {
 		final Long kundeId = kunde == null ? null : kunde.getId();
-		return "Bestellung [id=" + id + ", kundeId=" + kundeId
-			   + ", kundeUri=" + kundeUri
-		       + ", erzeugt=" + erzeugt
-		       + ", aktualisiert=" + aktualisiert + ']';
+		return "Bestellung [id=" + id + ", kundeId=" + kundeId + ", kundeUri="
+				+ kundeUri + ", erzeugt=" + erzeugt + ", aktualisiert="
+				+ aktualisiert + ']';
 	}
 
 	public void setValues(Bestellung b) {
 		version = b.version;
 		erzeugt = b.erzeugt;
 		aktualisiert = b.aktualisiert;
-		
+
 	}
 
 	@Override
@@ -316,26 +323,27 @@ public class Bestellung implements Serializable {
 			return false;
 		}
 		final Bestellung other = (Bestellung) obj;
-		
+
 		if (kunde == null) {
 			if (other.kunde != null) {
 				return false;
 			}
 		}
+
 		else if (!kunde.equals(other.kunde)) {
 			return false;
 		}
-		
+
 		if (erzeugt == null) {
 			if (other.erzeugt != null) {
 				return false;
 			}
 		}
+
 		else if (!erzeugt.equals(other.erzeugt)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 }
-

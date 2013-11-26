@@ -8,9 +8,6 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
-
-
-
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -36,51 +33,47 @@ import org.jboss.logging.Logger;
 
 import de.shop.util.IdGroup;
 
-
 @Entity
 @Table(name = "artikel")
 @Cacheable
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name  = Artikel.FIND_VERFUEGBARE_ARTIKEL,
-            	query = "SELECT      a"
-            	        + " FROM     Artikel a"
-						+ " WHERE    a.ausgesondert = FALSE"
-                        + " ORDER BY a.id ASC"),
-	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_BEZ,
-            	query = "SELECT      a"
-                        + " FROM     Artikel a"
-						+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_BEZEICHNUNG
-						+ "          AND a.ausgesondert = FALSE"
-			 	        + " ORDER BY a.id ASC"),
-   	@NamedQuery(name  = Artikel.FIND_ARTIKEL_MAX_PREIS,
-            	query = "SELECT      a"
-                        + " FROM     Artikel a"
-						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
-			 	        + " ORDER BY a.id ASC"),
-	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
-				query = "SELECT		 a"
-						+ " FROM	 Artikel a"
-						+ " WHERE	 a.id = " + Artikel.PARAM_ID
-						+ " ORDER BY a.id ASC")
-})
+		@NamedQuery(name = Artikel.FIND_VERFUEGBARE_ARTIKEL, query = "SELECT      a"
+				+ " FROM     Artikel a"
+				+ " WHERE    a.ausgesondert = FALSE"
+				+ " ORDER BY a.id ASC"),
+		@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_BEZ, query = "SELECT      a"
+				+ " FROM     Artikel a" + " WHERE    a.bezeichnung LIKE :"
+				+ Artikel.PARAM_BEZEICHNUNG
+				+ "          AND a.ausgesondert = FALSE" + " ORDER BY a.id ASC"),
+		@NamedQuery(name = Artikel.FIND_ARTIKEL_MAX_PREIS, query = "SELECT      a"
+				+ " FROM     Artikel a"
+				+ " WHERE    a.preis < :"
+				+ Artikel.PARAM_PREIS + " ORDER BY a.id ASC"),
+		@NamedQuery(name = Artikel.FIND_ARTIKEL_BY_ID, query = "SELECT		 a"
+				+ " FROM	 Artikel a" + " WHERE	 a.id = " + Artikel.PARAM_ID
+				+ " ORDER BY a.id ASC") })
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
+
 	private static final int BEZEICHNUNG_LENGTH_MAX = 32;
-	
+
 	private static final String PREFIX = "Artikel.";
-	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
-	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
-	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
+	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX
+			+ "findVerfuegbareArtikel";
+	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX
+			+ "findArtikelByBez";
+	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX
+			+ "findArtikelByMaxPreis";
 	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
 	public static final String INSERT_ARTIKEL = PREFIX + "INSERT_ARTIKEL";
 
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
 	public static final String PARAM_ID = "id";
-	
+
 	public static final int ERSTE_VERSION = 0;
 
 	@Id
@@ -88,18 +81,15 @@ public class Artikel implements Serializable {
 	@Column(nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
-	
 
-	
 	@Column(length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
 	@NotEmpty(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
 	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
 	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikelverwaltung.artikel.bezeichnung.length}")
 	private String bezeichnung = "";
-	
-	
+
 	private double preis;
-	
+
 	private boolean ausgesondert;
 
 	@Column(nullable = false)
@@ -111,17 +101,15 @@ public class Artikel implements Serializable {
 	@Temporal(TIMESTAMP)
 	@XmlTransient
 	private Date aktualisiert;
-	
+
 	@Version
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
-	
-
 
 	public Artikel() {
 		super();
 	}
-	
+
 	public Artikel(String bezeichnung, double preis, boolean ausgesondert) {
 		super();
 		this.bezeichnung = bezeichnung;
@@ -135,17 +123,17 @@ public class Artikel implements Serializable {
 		aktualisiert = new Date();
 
 	}
-	
+
 	@PostPersist
 	private void postPersist() {
 		LOGGER.debugf("Neuer Artikel mit ID=%d", id);
 	}
-	
+
 	@PreUpdate
 	private void preUpdate() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
-		
+
 	}
 
 	public Long getId() {
@@ -193,9 +181,10 @@ public class Artikel implements Serializable {
 	}
 
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert
+				.clone();
 	}
-	
+
 	public void setValues(Artikel a) {
 		version = a.version;
 		bezeichnung = a.bezeichnung;
@@ -203,7 +192,7 @@ public class Artikel implements Serializable {
 		ausgesondert = a.ausgesondert;
 		erzeugt = a.erzeugt;
 		aktualisiert = a.aktualisiert;
-		
+
 	}
 
 	@Override
@@ -218,7 +207,6 @@ public class Artikel implements Serializable {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
-	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -232,21 +220,23 @@ public class Artikel implements Serializable {
 			return false;
 		}
 		final Artikel other = (Artikel) obj;
-		
+
 		if (ausgesondert != other.ausgesondert) {
 			return false;
 		}
-		
+
 		if (bezeichnung == null) {
 			if (other.bezeichnung != null) {
 				return false;
 			}
 		}
+
 		else if (!bezeichnung.equals(other.bezeichnung)) {
 			return false;
 		}
-		
-		if (Double.doubleToLongBits(preis) != Double.doubleToLongBits(other.preis)) {
+
+		if (Double.doubleToLongBits(preis) != Double
+				.doubleToLongBits(other.preis)) {
 			return false;
 		}
 		return true;
@@ -254,8 +244,8 @@ public class Artikel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Artikel [id=" + id + ", version=" + version
-		       + ", bezeichnung=" + bezeichnung + ", ausgesondert=" + ausgesondert + "]";
+		return "Artikel [id=" + id + ", version=" + version + ", bezeichnung="
+				+ bezeichnung + ", ausgesondert=" + ausgesondert + "]";
 	}
 
 	public int getVersion() {

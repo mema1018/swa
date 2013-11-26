@@ -23,10 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-
-
-
-
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -61,7 +57,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
@@ -75,7 +70,6 @@ import de.shop.util.IdGroup;
 import de.shop.util.persistence.File;
 import de.shop.auth.domain.RolleType;
 
-
 // Alternativen bei @Inheritance
 //   strategy=SINGLE_TABLE (=default), TABLE_PER_CLASS, JOINED
 // Alternativen bei @DiscriminatorColumn
@@ -88,110 +82,108 @@ import de.shop.auth.domain.RolleType;
 @Formatted
 @XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
 @NamedQueries({
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN,
-                query = "SELECT k"
-				        + " FROM   AbstractKunde k"),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN_FETCH_BESTELLUNGEN,
-				query = "SELECT  DISTINCT k"
-						+ " FROM AbstractKunde k LEFT JOIN FETCH k.bestellungen"),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN_ORDER_BY_ID,
-		        query = "SELECT   k"
-				        + " FROM  AbstractKunde k"
-		                + " ORDER BY k.id"),
-	@NamedQuery(name  = AbstractKunde.FIND_IDS_BY_PREFIX,
-		        query = "SELECT   k.id"
-		                + " FROM  AbstractKunde k"
-		                + " WHERE CONCAT('', k.id) LIKE :" + AbstractKunde.PARAM_KUNDE_ID_PREFIX
-		                + " ORDER BY k.id"),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN_BY_NACHNAME,
-	            query = "SELECT k"
-				        + " FROM   AbstractKunde k"
-	            		+ " WHERE  UPPER(k.nachname) = UPPER(:" + AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
-	@NamedQuery(name  = AbstractKunde.FIND_NACHNAMEN_BY_PREFIX,
-   	            query = "SELECT   DISTINCT k.nachname"
-				        + " FROM  AbstractKunde k "
-	            		+ " WHERE UPPER(k.nachname) LIKE UPPER(:"
-	            		+ AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
-	            query = "SELECT DISTINCT k"
-			            + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
-			            + " WHERE  UPPER(k.nachname) = UPPER(:" + AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
-	            query = "SELECT DISTINCT k"
-			            + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
-			            + " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),
-   	@NamedQuery(name  = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
-   	            query = "SELECT DISTINCT k"
-   			            + " FROM   AbstractKunde k LEFT JOIN FETCH k.wartungsvertraege"
-   			            + " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),
-   	@NamedQuery(name  = AbstractKunde.FIND_KUNDE_BY_EMAIL,
-   	            query = "SELECT DISTINCT k"
-   			            + " FROM   AbstractKunde k"
-   			            + " WHERE  k.email = :" + AbstractKunde.PARAM_KUNDE_EMAIL),
-    @NamedQuery(name  = AbstractKunde.FIND_KUNDEN_BY_PLZ,
-	            query = "SELECT k"
-				        + " FROM  AbstractKunde k"
-			            + " WHERE k.adresse.plz = :" + AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ),
-	@NamedQuery(name  = AbstractKunde.FIND_KUNDE_BY_USERNAME,
-			    query = "SELECT   k"
-						+ " FROM  AbstractKunde k"
-			            + " WHERE CONCAT('', k.id) = :" + AbstractKunde.PARAM_KUNDE_USERNAME),
-	@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_DATE,
-			    query = "SELECT k"
-			            + " FROM  AbstractKunde k"
-			    		+ " WHERE k.seit = :" + AbstractKunde.PARAM_KUNDE_SEIT),
-	@NamedQuery(name = AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN,
-			    query = "SELECT k"
-			            + " FROM  AbstractKunde k"
-			    		+ " WHERE TYPE(k) IN (Privatkunde, Firmenkunde)")
-})
-@ScriptAssert(lang = "javascript",
-	          script = "(_this.password == null && _this.passwordWdh == null)"
-	                   + "|| (_this.password != null && _this.password.equals(_this.passwordWdh))",
-	          message = "{kundenverwaltung.kunde.password.notEqual}",
-	          groups = PasswordGroup.class)
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN, query = "SELECT k"
+				+ " FROM   AbstractKunde k"),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_FETCH_BESTELLUNGEN, query = "SELECT  DISTINCT k"
+				+ " FROM AbstractKunde k LEFT JOIN FETCH k.bestellungen"),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_ORDER_BY_ID, query = "SELECT   k"
+				+ " FROM  AbstractKunde k" + " ORDER BY k.id"),
+		@NamedQuery(name = AbstractKunde.FIND_IDS_BY_PREFIX, query = "SELECT   k.id"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE CONCAT('', k.id) LIKE :"
+				+ AbstractKunde.PARAM_KUNDE_ID_PREFIX + " ORDER BY k.id"),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME, query = "SELECT k"
+				+ " FROM   AbstractKunde k"
+				+ " WHERE  UPPER(k.nachname) = UPPER(:"
+				+ AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
+		@NamedQuery(name = AbstractKunde.FIND_NACHNAMEN_BY_PREFIX, query = "SELECT   DISTINCT k.nachname"
+				+ " FROM  AbstractKunde k "
+				+ " WHERE UPPER(k.nachname) LIKE UPPER(:"
+				+ AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
+				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
+				+ " WHERE  UPPER(k.nachname) = UPPER(:"
+				+ AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
+				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
+				+ " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE, query = "SELECT DISTINCT k"
+				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.wartungsvertraege"
+				+ " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_EMAIL, query = "SELECT DISTINCT k"
+				+ " FROM   AbstractKunde k"
+				+ " WHERE  k.email = :"
+				+ AbstractKunde.PARAM_KUNDE_EMAIL),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_PLZ, query = "SELECT k"
+				+ " FROM  AbstractKunde k" + " WHERE k.adresse.plz = :"
+				+ AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_USERNAME, query = "SELECT   k"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE CONCAT('', k.id) = :"
+				+ AbstractKunde.PARAM_KUNDE_USERNAME),
+		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_DATE, query = "SELECT k"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE k.seit = :"
+				+ AbstractKunde.PARAM_KUNDE_SEIT),
+		@NamedQuery(name = AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN, query = "SELECT k"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE TYPE(k) IN (Privatkunde, Firmenkunde)") })
+@ScriptAssert(lang = "javascript", script = "(_this.password == null && _this.passwordWdh == null)"
+		+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))", 
+		message = "{kundenverwaltung.kunde.password.notEqual}", groups = PasswordGroup.class)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-	@Type(value = Privatkunde.class, name = AbstractKunde.PRIVATKUNDE),
-	@Type(value = Firmenkunde.class, name = AbstractKunde.FIRMENKUNDE) })
+		@Type(value = Privatkunde.class, name = AbstractKunde.PRIVATKUNDE),
+		@Type(value = Firmenkunde.class, name = AbstractKunde.FIRMENKUNDE) })
 public abstract class AbstractKunde implements Serializable {
 	private static final long serialVersionUID = 5685115602958386843L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
-	//Pattern mit UTF-8 (statt Latin-1 bzw. ISO-8859-1) Schreibweise fuer Umlaute:
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
+
+	// Pattern mit UTF-8 (statt Latin-1 bzw. ISO-8859-1) Schreibweise fuer
+	// Umlaute:
 	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
 	private static final String PREFIX_ADEL = "(o'|von|von der|von und zu|van)?";
-	
-	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
+
+	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN
+			+ "(-" + NAME_PATTERN + ")?";
 	public static final int NACHNAME_LENGTH_MIN = 2;
 	public static final int NACHNAME_LENGTH_MAX = 32;
 	public static final int VORNAME_LENGTH_MAX = 32;
 	public static final int EMAIL_LENGTH_MAX = 128;
 	public static final int DETAILS_LENGTH_MAX = 128 * 1024;
 	public static final int PASSWORD_LENGTH_MAX = 256;
-	
+
 	public static final String PRIVATKUNDE = "P";
 	public static final String FIRMENKUNDE = "F";
-	
+
 	private static final String PREFIX = "AbstractKunde.";
 	public static final String FIND_KUNDEN = PREFIX + "findKunden";
-	public static final String FIND_KUNDEN_FETCH_BESTELLUNGEN = PREFIX + "findKundenFetchBestellungen";
-	public static final String FIND_KUNDEN_ORDER_BY_ID = PREFIX + "findKundenOrderById";
+	public static final String FIND_KUNDEN_FETCH_BESTELLUNGEN = PREFIX
+			+ "findKundenFetchBestellungen";
+	public static final String FIND_KUNDEN_ORDER_BY_ID = PREFIX
+			+ "findKundenOrderById";
 	public static final String FIND_IDS_BY_PREFIX = PREFIX + "findIdsByPrefix";
-	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX + "findKundenByNachname";
-	public static final String FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN =
-		                       PREFIX + "findKundenByNachnameFetchBestellungen";
-	public static final String FIND_NACHNAMEN_BY_PREFIX = PREFIX + "findNachnamenByPrefix";
-	public static final String FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE =
-		                       PREFIX + "findKundenByNachnameFetchWartungsvertraege";
-	public static final String FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN =
-		                       PREFIX + "findKundeByIdFetchBestellungen";
-	public static final String FIND_KUNDE_BY_EMAIL = PREFIX + "findKundeByEmail";
+	public static final String FIND_KUNDEN_BY_NACHNAME = PREFIX
+			+ "findKundenByNachname";
+	public static final String FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN = PREFIX
+			+ "findKundenByNachnameFetchBestellungen";
+	public static final String FIND_NACHNAMEN_BY_PREFIX = PREFIX
+			+ "findNachnamenByPrefix";
+	public static final String FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE = PREFIX
+			+ "findKundenByNachnameFetchWartungsvertraege";
+	public static final String FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN = PREFIX
+			+ "findKundeByIdFetchBestellungen";
+	public static final String FIND_KUNDE_BY_EMAIL = PREFIX
+			+ "findKundeByEmail";
 	public static final String FIND_KUNDEN_BY_PLZ = PREFIX + "findKundenByPlz";
-	public static final String FIND_KUNDE_BY_USERNAME = PREFIX + "findKundeByUsername";
-	public static final String FIND_KUNDEN_BY_DATE = PREFIX + "findKundenByDate";
-	public static final String FIND_PRIVATKUNDEN_FIRMENKUNDEN = PREFIX + "findPrivatkundenFirmenkunden";
-	
+	public static final String FIND_KUNDE_BY_USERNAME = PREFIX
+			+ "findKundeByUsername";
+	public static final String FIND_KUNDEN_BY_DATE = PREFIX
+			+ "findKundenByDate";
+	public static final String FIND_PRIVATKUNDEN_FIRMENKUNDEN = PREFIX
+			+ "findPrivatkundenFirmenkunden";
+
 	public static final String PARAM_KUNDE_ID = "kundeId";
 	public static final String PARAM_KUNDE_ID_PREFIX = "idPrefix";
 	public static final String PARAM_KUNDE_NACHNAME = "nachname";
@@ -200,63 +192,62 @@ public abstract class AbstractKunde implements Serializable {
 	public static final String PARAM_KUNDE_USERNAME = "username";
 	public static final String PARAM_KUNDE_SEIT = "seit";
 	public static final String PARAM_KUNDE_EMAIL = "email";
-	
-	public static final int ERSTE_VERSION = 0;
 
+	public static final int ERSTE_VERSION = 0;
 
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
 	@Min(value = MIN_ID, message = "{kundenverwaltung.kunde.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
-	
+
 	@Version
 	@Basic(optional = false)
 	private int version = ERSTE_VERSION;
 
 	@Column(length = NACHNAME_LENGTH_MAX)
 	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
-	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX,
-	      message = "{kundenverwaltung.kunde.nachname.length}")
+	@Size(min = NACHNAME_LENGTH_MIN, max = NACHNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.nachname.length}")
 	@Pattern(regexp = NACHNAME_PATTERN, message = "{kundenverwaltung.kunde.nachname.pattern}")
 	private String nachname;
 
 	@Column(length = VORNAME_LENGTH_MAX)
 	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
 	private String vorname;
-	
+
 	@Temporal(DATE)
 	@Past(message = "{kundenverwaltung.kunde.seit.past}")
 	private Date seit;
-	
+
 	@Column(nullable = false, precision = 5, scale = 4)
 	private BigDecimal rabatt;
-	
+
 	@Column(nullable = false, precision = 15, scale = 3)
 	private BigDecimal umsatz;
-	
+
 	@Column(length = EMAIL_LENGTH_MAX, nullable = false, unique = true)
 	@Email(message = "{kundenverwaltung.kunde.email}")
 	private String email;
-	
+
 	@Column(nullable = false)
 	private int newsletter;
-	
+
 	@Column(length = PASSWORD_LENGTH_MAX)
 	private String password;
-	
+
 	@Transient
 	@XmlTransient
 	private String passwordWdh;
-	
-//	@AssertTrue(groups = PasswordGroup.class, message = "{kundenverwaltung.kunde.password.notEqual}")
-//	public boolean isPasswordEqual() {
-//		if (password == null) {
-//			return passwordWdh == null;
-//		}
-//		return password.equals(passwordWdh);
-//	}
-	
+
+	// @AssertTrue(groups = PasswordGroup.class, message =
+	// "{kundenverwaltung.kunde.password.notEqual}")
+	// public boolean isPasswordEqual() {
+	// if (password == null) {
+	// return passwordWdh == null;
+	// }
+	// return password.equals(passwordWdh);
+	// }
+
 	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
 	@Valid
 	@NotNull(message = "{kundenverwaltung.kunde.adresse.notNull}")
@@ -268,7 +259,7 @@ public abstract class AbstractKunde implements Serializable {
 	@OrderColumn(name = "idx", nullable = false)
 	@XmlTransient
 	private List<Bestellung> bestellungen;
-	
+
 	@Transient
 	private URI bestellungenUri;
 
@@ -277,7 +268,7 @@ public abstract class AbstractKunde implements Serializable {
 	@OrderColumn(name = "idx", nullable = false)
 	@XmlTransient
 	private List<Wartungsvertrag> wartungsvertraege;
-	
+
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@XmlTransient
@@ -287,43 +278,41 @@ public abstract class AbstractKunde implements Serializable {
 	@Temporal(TIMESTAMP)
 	@XmlTransient
 	private Date aktualisiert;
-	
+
 	@ElementCollection(fetch = EAGER)
-	@CollectionTable(name = "kunde_rolle",
-	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
-   	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "rolle" }))
+	@CollectionTable(name = "kunde_rolle", joinColumns = @JoinColumn(name = "kunde_fk", nullable = false), 
+	uniqueConstraints = @UniqueConstraint(columnNames = {
+			"kunde_fk", "rolle" }))
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
 	private Set<RolleType> rollen;
-	
 
 	@OneToOne(cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "file_fk")
 	@XmlTransient
 	private File file;
-	
 
 	@PrePersist
 	protected void prePersist() {
 		erzeugt = new Date();
 		aktualisiert = new Date();
 	}
-	
+
 	@PostPersist
 	protected void postPersist() {
 		LOGGER.debugf("Neuer Kunde mit ID=%d", id);
 	}
-	
+
 	@PreUpdate
 	protected void preUpdate() {
 		aktualisiert = new Date();
 		erzeugt = new Date();
 	}
-	
+
 	@PostLoad
 	protected void postLoad() {
 		passwordWdh = password;
 	}
-	
+
 	public void setValues(AbstractKunde k) {
 		version = k.version;
 		nachname = k.nachname;
@@ -342,10 +331,11 @@ public abstract class AbstractKunde implements Serializable {
 		adresse.setStrasse(k.adresse.getStrasse());
 		adresse.setHausnr(k.adresse.getHausnr());
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -357,6 +347,7 @@ public abstract class AbstractKunde implements Serializable {
 	public void setVersion(int version) {
 		this.version = version;
 	}
+
 	public File getFile() {
 		return file;
 	}
@@ -368,6 +359,7 @@ public abstract class AbstractKunde implements Serializable {
 	public String getNachname() {
 		return nachname;
 	}
+
 	public void setNachname(String nachname) {
 		this.nachname = nachname;
 	}
@@ -375,13 +367,15 @@ public abstract class AbstractKunde implements Serializable {
 	public String getVorname() {
 		return vorname;
 	}
+
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
 	}
-	
+
 	public Date getSeit() {
 		return seit == null ? null : (Date) seit.clone();
 	}
+
 	public void setSeit(Date seit) {
 		this.seit = seit == null ? null : (Date) seit.clone();
 	}
@@ -396,16 +390,16 @@ public abstract class AbstractKunde implements Serializable {
 		final DateFormat f = DateFormat.getDateInstance(style, locale);
 		return f.format(temp);
 	}
-	
+
 	// Parameter, z.B. DateFormat.MEDIUM, Locale.GERMANY
 	// MEDIUM fuer Format dd.MM.yyyy
 	public void setSeit(String seitStr, int style, Locale locale) {
 		final DateFormat f = DateFormat.getDateInstance(style, locale);
 		try {
 			this.seit = f.parse(seitStr);
-		}
-		catch (ParseException e) {
-			throw new RuntimeException("Kein gueltiges Datumsformat fuer: " + seitStr, e);
+		} catch (ParseException e) {
+			throw new RuntimeException("Kein gueltiges Datumsformat fuer: "
+					+ seitStr, e);
 		}
 	}
 
@@ -416,10 +410,11 @@ public abstract class AbstractKunde implements Serializable {
 	public void setUmsatz(BigDecimal umsatz) {
 		this.umsatz = umsatz;
 	}
-	
+
 	public BigDecimal getRabatt() {
 		return rabatt;
 	}
+
 	public void setRabatt(BigDecimal rabatt) {
 		this.rabatt = rabatt;
 	}
@@ -459,30 +454,31 @@ public abstract class AbstractKunde implements Serializable {
 	public Adresse getAdresse() {
 		return adresse;
 	}
+
 	public void setAdresse(Adresse adresse) {
 		this.adresse = adresse;
 	}
-	
+
 	public List<Bestellung> getBestellungen() {
 		if (bestellungen == null) {
 			return null;
-		}		
+		}
 		return Collections.unmodifiableList(bestellungen);
 	}
-	
+
 	public void setBestellungen(List<Bestellung> bestellungen) {
 		if (this.bestellungen == null) {
 			this.bestellungen = bestellungen;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection
 		this.bestellungen.clear();
 		if (bestellungen != null) {
 			this.bestellungen.addAll(bestellungen);
 		}
 	}
-	
+
 	public AbstractKunde addBestellung(Bestellung bestellung) {
 		if (bestellungen == null) {
 			bestellungen = new ArrayList<>();
@@ -490,24 +486,20 @@ public abstract class AbstractKunde implements Serializable {
 		bestellungen.add(bestellung);
 		return this;
 	}
-	
-	
-	
+
 	public void setRollen(Set<RolleType> rollen) {
 		if (this.rollen == null) {
 			this.rollen = rollen;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection
 		this.rollen.clear();
 		if (rollen != null) {
 			this.rollen.addAll(rollen);
 		}
 	}
-	
-	
-	
+
 	public AbstractKunde addRollen(Collection<RolleType> rollen) {
 		LOGGER.tracef("neue Rollen: %s", rollen);
 		if (this.rollen == null) {
@@ -517,11 +509,11 @@ public abstract class AbstractKunde implements Serializable {
 		LOGGER.tracef("Rollen nachher: %s", this.rollen);
 		return this;
 	}
-	
-	
+
 	public URI getBestellungenUri() {
 		return bestellungenUri;
 	}
+
 	public void setBestellungenUri(URI bestellungenUri) {
 		this.bestellungenUri = bestellungenUri;
 	}
@@ -530,7 +522,7 @@ public abstract class AbstractKunde implements Serializable {
 		if (wartungsvertraege == null) {
 			return null;
 		}
-		
+
 		return Collections.unmodifiableList(wartungsvertraege);
 	}
 
@@ -539,14 +531,14 @@ public abstract class AbstractKunde implements Serializable {
 			this.wartungsvertraege = wartungsvertraege;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection
 		this.wartungsvertraege.clear();
 		if (wartungsvertraege != null) {
 			this.wartungsvertraege.addAll(wartungsvertraege);
 		}
 	}
-	
+
 	public AbstractKunde addWartungsvertrag(Wartungsvertrag wartungsvertrag) {
 		if (wartungsvertraege == null) {
 			wartungsvertraege = new ArrayList<>();
@@ -558,28 +550,28 @@ public abstract class AbstractKunde implements Serializable {
 	public Date getAktualisiert() {
 		return aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
+
 	public void setAktualisiert(Date aktualisiert) {
-		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert.clone();
+		this.aktualisiert = aktualisiert == null ? null : (Date) aktualisiert
+				.clone();
 	}
 
 	public Date getErzeugt() {
 		return erzeugt == null ? null : (Date) erzeugt.clone();
 	}
+
 	public void setErzeugt(Date erzeugt) {
 		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
 	}
 
-
 	@Override
 	public String toString() {
 		return "AbstractKunde [id=" + id + ", version=" + version
-			   + ", nachname=" + nachname + ", vorname=" + vorname
-			   + ", seit=" + getSeitAsString(DateFormat.MEDIUM, Locale.GERMANY)
-			   + ", umsatz=" + umsatz
-			   + ", email=" + email
-			   + ", password=" + password + ", passwordWdh=" + passwordWdh
-			   + ", erzeugt=" + erzeugt
-			   + ", aktualisiert=" + aktualisiert + "]";
+				+ ", nachname=" + nachname + ", vorname=" + vorname + ", seit="
+				+ getSeitAsString(DateFormat.MEDIUM, Locale.GERMANY)
+				+ ", umsatz=" + umsatz + ", email=" + email + ", password="
+				+ password + ", passwordWdh=" + passwordWdh + ", erzeugt="
+				+ erzeugt + ", aktualisiert=" + aktualisiert + "]";
 	}
 
 	/**
@@ -606,21 +598,24 @@ public abstract class AbstractKunde implements Serializable {
 			return false;
 		}
 		final AbstractKunde other = (AbstractKunde) obj;
-		
+
 		if (email == null) {
 			if (other.email != null) {
 				return false;
 			}
-		}
+		} 
+		
 		else if (!email.equals(other.email)) {
 			return false;
 		}
-		
+
 		return true;
 	}
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		final AbstractKunde neuesObjekt = AbstractKunde.class.cast(super.clone());
+		final AbstractKunde neuesObjekt = AbstractKunde.class.cast(super
+				.clone());
 		neuesObjekt.id = id;
 		neuesObjekt.version = version;
 		neuesObjekt.nachname = nachname;
@@ -636,5 +631,4 @@ public abstract class AbstractKunde implements Serializable {
 		return neuesObjekt;
 	}
 
-	
 }

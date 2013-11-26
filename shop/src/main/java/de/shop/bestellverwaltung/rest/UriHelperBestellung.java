@@ -1,6 +1,5 @@
 package de.shop.bestellverwaltung.rest;
 
-
 import java.net.URI;
 import java.util.List;
 
@@ -15,50 +14,51 @@ import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
 import de.shop.util.Log;
 
-
 @ApplicationScoped
 @Log
 public class UriHelperBestellung {
 	@Inject
 	private UriHelperKunde uriHelperKunde;
-	
+
 	@Inject
 	private UriHelperArtikel uriHelperArtikel;
-	
+
 	public void updateUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		// URL fuer Kunde setzen
 		final AbstractKunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			
-			final URI kundeUri = uriHelperKunde.getUriKunde(bestellung.getKunde(), uriInfo);
+
+			final URI kundeUri = uriHelperKunde.getUriKunde(
+					bestellung.getKunde(), uriInfo);
 			bestellung.setKundeUri(kundeUri);
 		}
-		
+
 		// URLs fuer Artikel in den Bestellpositionen setzen
-		final List<Bestellposition> bestellpositionen = bestellung.getBestellpositionen();
+		final List<Bestellposition> bestellpositionen = bestellung
+				.getBestellpositionen();
 		if (bestellpositionen != null && !bestellpositionen.isEmpty()) {
 			for (Bestellposition bp : bestellpositionen) {
-				final URI artikelUri = uriHelperArtikel.getUriArtikel(bp.getArtikel(), uriInfo);
+				final URI artikelUri = uriHelperArtikel.getUriArtikel(
+						bp.getArtikel(), uriInfo);
 				bp.setArtikelUri(artikelUri);
 			}
 		}
-		
+
 		// URL fuer Lieferungen setzen
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-                                     .path(BestellungResource.class)
-                                     .path(BestellungResource.class, "findBestellungById");
+				.path(BestellungResource.class)
+				.path(BestellungResource.class, "findBestellungById");
 		final URI uri = ub.build(bestellung.getId());
 		bestellung.setLieferungenUri(uri);
-		
+
 	}
 
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-		                             .path(BestellungResource.class)
-		                             .path(BestellungResource.class, "findBestellungById");
+				.path(BestellungResource.class)
+				.path(BestellungResource.class, "findBestellungById");
 		final URI uri = ub.build(bestellung.getId());
 		return uri;
 	}
-	
 
 }

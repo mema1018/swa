@@ -13,5 +13,5 @@ public class LocaleHelper {
 		final Locale locale = locales.isEmpty() ? null : locales.get(0);
 		return locale;
 	}
-	
+
 }
