@@ -32,6 +32,17 @@ public class Privatkunde extends AbstractKunde {
 			"kunde_fk", "hobby_fk" }))
 	@Column(table = "kunde_hobby", name = "hobby_fk", nullable = false)
 	private Set<HobbyType> hobbies;
+	
+	@Column(nullable = false)
+	private boolean newsletter;
+	
+	public void setNewsletter(boolean newsletter) {
+		this.newsletter = newsletter;
+	}
+
+	public boolean isNewsletter() {
+		return newsletter;
+	}
 
 	public FamilienstandType getFamilienstand() {
 		return familienstand;

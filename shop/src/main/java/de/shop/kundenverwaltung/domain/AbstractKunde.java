@@ -48,6 +48,7 @@ import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -229,15 +230,16 @@ public abstract class AbstractKunde implements Serializable {
 	@Email(message = "{kundenverwaltung.kunde.email}")
 	private String email;
 
-	@Column(nullable = false)
-	private int newsletter;
-
 	@Column(length = PASSWORD_LENGTH_MAX)
 	private String password;
 
 	@Transient
 	@XmlTransient
 	private String passwordWdh;
+	
+	@Transient
+	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
+	private boolean agbAkzeptiert;
 
 	// @AssertTrue(groups = PasswordGroup.class, message =
 	// "{kundenverwaltung.kunde.password.notEqual}")
@@ -427,14 +429,6 @@ public abstract class AbstractKunde implements Serializable {
 		this.email = email;
 	}
 
-	public void setNewsletter(int newsletter) {
-		this.newsletter = newsletter;
-	}
-
-	public int isNewsletter() {
-		return newsletter;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -485,6 +479,11 @@ public abstract class AbstractKunde implements Serializable {
 		}
 		bestellungen.add(bestellung);
 		return this;
+	}
+	
+	public Set<RolleType> getRollen()
+	{
+		return this.rollen;
 	}
 
 	public void setRollen(Set<RolleType> rollen) {
@@ -622,7 +621,6 @@ public abstract class AbstractKunde implements Serializable {
 		neuesObjekt.vorname = vorname;
 		neuesObjekt.umsatz = umsatz;
 		neuesObjekt.email = email;
-		neuesObjekt.newsletter = newsletter;
 		neuesObjekt.password = password;
 		neuesObjekt.passwordWdh = passwordWdh;
 		neuesObjekt.adresse = adresse;
