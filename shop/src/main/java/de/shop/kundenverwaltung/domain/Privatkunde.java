@@ -42,6 +42,7 @@ public class Privatkunde extends AbstractKunde {
 	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
 	private boolean agbAkzeptiert = true;
 	
+<<<<<<< HEAD
 	@Column(nullable = true)
 	private String bemerkungen;
 
@@ -52,6 +53,9 @@ public class Privatkunde extends AbstractKunde {
 	public void setBemerkung(String bemerkungen) {
 		this.bemerkungen = bemerkungen;
 	}
+=======
+
+>>>>>>> refs/remotes/origin/master
 
 	public void setNewsletter(boolean newsletter) {
 		this.newsletter = newsletter;
