@@ -48,6 +48,7 @@ import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -88,10 +89,10 @@ import de.shop.auth.domain.RolleType;
 				+ " FROM AbstractKunde k LEFT JOIN FETCH k.bestellungen"),
 		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_ORDER_BY_ID, query = "SELECT   k"
 				+ " FROM  AbstractKunde k" + " ORDER BY k.id"),
-		@NamedQuery(name = AbstractKunde.FIND_IDS_BY_PREFIX, query = "SELECT   k.id"
-				+ " FROM  AbstractKunde k"
-				+ " WHERE CONCAT('', k.id) LIKE :"
-				+ AbstractKunde.PARAM_KUNDE_ID_PREFIX + " ORDER BY k.id"),
+		@NamedQuery(name = AbstractKunde.FIND_IDS_BY_PREFIX, query = "SELECT k "
+                          + "  FROM AbstractKunde k " 
+                          + " WHERE CONCAT('', k.id) LIKE :idPrefix "
+                          + "     ORDER BY k.id "),
 		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME, query = "SELECT k"
 				+ " FROM   AbstractKunde k"
 				+ " WHERE  UPPER(k.nachname) = UPPER(:"
@@ -220,7 +221,7 @@ public abstract class AbstractKunde implements Serializable {
 	private Date seit;
 
 	@Column(nullable = false, precision = 5, scale = 4)
-	private BigDecimal rabatt;
+	private BigDecimal rabatt = new BigDecimal(0.0);
 
 	@Column(nullable = false, precision = 15, scale = 3)
 	private BigDecimal umsatz;
@@ -229,16 +230,13 @@ public abstract class AbstractKunde implements Serializable {
 	@Email(message = "{kundenverwaltung.kunde.email}")
 	private String email;
 
-	@Column(nullable = false)
-	private int newsletter;
-
 	@Column(length = PASSWORD_LENGTH_MAX)
 	private String password;
 
 	@Transient
 	@XmlTransient
 	private String passwordWdh;
-
+	
 	// @AssertTrue(groups = PasswordGroup.class, message =
 	// "{kundenverwaltung.kunde.password.notEqual}")
 	// public boolean isPasswordEqual() {
@@ -427,14 +425,6 @@ public abstract class AbstractKunde implements Serializable {
 		this.email = email;
 	}
 
-	public void setNewsletter(int newsletter) {
-		this.newsletter = newsletter;
-	}
-
-	public int isNewsletter() {
-		return newsletter;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -485,6 +475,11 @@ public abstract class AbstractKunde implements Serializable {
 		}
 		bestellungen.add(bestellung);
 		return this;
+	}
+	
+	public Set<RolleType> getRollen()
+	{
+		return this.rollen;
 	}
 
 	public void setRollen(Set<RolleType> rollen) {
@@ -622,7 +617,6 @@ public abstract class AbstractKunde implements Serializable {
 		neuesObjekt.vorname = vorname;
 		neuesObjekt.umsatz = umsatz;
 		neuesObjekt.email = email;
-		neuesObjekt.newsletter = newsletter;
 		neuesObjekt.password = password;
 		neuesObjekt.passwordWdh = passwordWdh;
 		neuesObjekt.adresse = adresse;

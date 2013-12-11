@@ -12,7 +12,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.AssertTrue;
 
 @Entity
 @DiscriminatorValue(PRIVATKUNDE)
@@ -32,6 +34,40 @@ public class Privatkunde extends AbstractKunde {
 			"kunde_fk", "hobby_fk" }))
 	@Column(table = "kunde_hobby", name = "hobby_fk", nullable = false)
 	private Set<HobbyType> hobbies;
+	
+	@Column(nullable = false)
+	private boolean newsletter;
+	
+	@Transient
+	@AssertTrue(message = "{kundenverwaltung.kunde.agb}")
+	private boolean agbAkzeptiert = true;
+	
+	@Column(nullable = true)
+	private String bemerkungen;
+
+	public String getBemerkungen() {
+		return bemerkungen;
+	}
+
+	public void setBemerkung(String bemerkungen) {
+		this.bemerkungen = bemerkungen;
+	}
+
+	public void setNewsletter(boolean newsletter) {
+		this.newsletter = newsletter;
+	}
+
+	public boolean isNewsletter() {
+		return newsletter;
+	}
+	
+	public boolean isAgbAkzeptiert() {
+		return agbAkzeptiert;
+	}
+
+	public void setAgbAkzeptiert(boolean agbAkzeptiert) {
+		this.agbAkzeptiert = agbAkzeptiert;
+	}
 
 	public FamilienstandType getFamilienstand() {
 		return familienstand;
