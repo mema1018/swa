@@ -54,6 +54,11 @@
 						<f:verbatim/>
 						
 					</h:panelGrid>
+					<p id="buttons">
+							<h:commandButton id="updateSubmit" action="#{artikelModel.update}" value="#{msgAv['updateArtikel.submit']}"/>
+							#{' '}
+							<h:commandButton id="reset" type="reset" value="#{msgAv['updateArtikel.reset']}"/>
+						</p>
 				</h:form>
 			</ui:define>
 		</ui:composition>

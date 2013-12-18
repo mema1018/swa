@@ -186,4 +186,9 @@ public class ArtikelService implements Serializable {
 		return artikel;
 	}
 
+	public List<Artikel> ladenhueter(int anzahl) {
+		return em.createNamedQuery(Artikel.FIND_LADENHUETER, Artikel.class)
+				 .setMaxResults(anzahl)
+				 .getResultList();
+	}
 }

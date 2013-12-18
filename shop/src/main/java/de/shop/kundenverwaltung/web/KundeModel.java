@@ -95,9 +95,6 @@ public class KundeModel implements Serializable {
 	private static final String CLIENT_ID_DELETE_BUTTON = "form:deleteButton";
 	private static final String MSG_KEY_DELETE_KUNDE_BESTELLUNG = "kunde.deleteMitBestellung";
 	//TODO Unnötige Import
-	private static final String CLIENT_ID_KUNDEN_NACHNAME ="form:nachnameInput";
-	private static final String MSG_KEY_KUNDEN_NOT_FOUND_BY_NACHNAME = "kunde.NotFound.Nachname";
-	
 	@PersistenceContext(type = EXTENDED)
 	private transient EntityManager em;
 	
