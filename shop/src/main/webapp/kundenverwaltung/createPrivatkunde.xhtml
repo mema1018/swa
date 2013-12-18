@@ -56,21 +56,6 @@
 							<h:outputLabel id="vornameLabel" for="vorname" value="#{msgKv['createPrivatkunde.vorname']}"/>
 							<h:inputText id="vorname" value="#{kunde.vorname}"/>
 							<f:verbatim/>
-												
-							<h:outputLabel id="seitLabel"
-							               for="seit"
-							               value="#{msgKv['createPrivatkunde.seit']}"/>
-							<r:calendar id="seit"
-							            datePattern="#{msgKv['createPrivatkunde.calendar.pattern']}"
-							            value="#{kunde.seit}"
-							            timezone="CET">
-							    <!-- https://issues.jboss.org/browse/RF-10224
-								<r:validator/>
-								-->
-								<r:placeholder id="seitPlaceholder" value="#{msgKv['createPrivatkunde.seit.placeholder']}" />
-							</r:calendar>
-							<r:messages id="fehlermeldungenSeit" for="seit"/>
-							
 							<h:outputLabel id="umsatzLabel" for="umsatz" value="#{msgKv['createPrivatkunde.umsatz']}"/>
 							<h:inputText id="umsatz"
 							             value="#{kunde.umsatz}"

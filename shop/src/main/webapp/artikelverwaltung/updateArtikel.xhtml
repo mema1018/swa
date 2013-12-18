@@ -34,7 +34,7 @@
 				<r:notifyMessages id="notifyMessages" stayTime="2000" nonblocking="true"/>
 				<r:messages id="fehlermeldungGobal" globalOnly="true"/>
 				
-				<h:form id="updateArtikelForm" rendered="#{not empty artikel">
+				<h:form id="updateArtikelForm" rendered="#{not empty artikel}">
 					<r:focus id="formFocus"/>
 					
 					
@@ -49,7 +49,7 @@
 						</h:inputText>
 						<r:messages id="fehlermeldungenBezeichnung" for="bezeichnung"/>
 						
-						<h:outputLabel id="preisLabel" for="preis" value="#{msgKv['updatePrivatkunde.preis']}"/>
+						<h:outputLabel id="preisLabel" for="preis" value="#{msgKv['updateArtikel.preis']}"/>
 						<h:inputText id="preis" value="#{artikel.preis}" valueChangeListener="#{artikel.geaendert}"/>
 						<f:verbatim/>
 						

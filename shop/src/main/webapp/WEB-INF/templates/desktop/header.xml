@@ -52,10 +52,11 @@
 					<h:inputSecret id="password" value="#{authModel.password}"/>
 					<h:commandButton id="loginButton" action="#{authModel.login}" value="#{msg['login.submit']}"/>
 				</h:panelGrid>
-				<h:link id="Registrieren" value="Registrieren" outcome="/kundenverwaltung/createPrivatkunde">
-				</h:link>
 				<r:message id="fehlermeldungLogin" for="username"/>
+							<h:link id="Registrieren" value="Registrieren" outcome="/kundenverwaltung/createPrivatkunde">
+				</h:link>
 			</h:form>
+
 
 			<h:form id="spracheForm">
 				<r:dropDownMenu id="sprache">

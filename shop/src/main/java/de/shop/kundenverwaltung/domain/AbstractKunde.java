@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
@@ -218,7 +219,7 @@ public abstract class AbstractKunde implements Serializable {
 
 	@Temporal(DATE)
 	@Past(message = "{kundenverwaltung.kunde.seit.past}")
-	private Date seit;
+	private Date seit = new Date();
 
 	@Column(nullable = false, precision = 5, scale = 4)
 	private BigDecimal rabatt = new BigDecimal(0.0);

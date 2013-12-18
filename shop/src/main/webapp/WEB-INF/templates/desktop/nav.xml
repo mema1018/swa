@@ -94,7 +94,7 @@
 					        value="Artikel aktualisieren"
 					        rendered="#{authModel.loggedIn}">
 						<c:if test="#{not empty javax.enterprise.context.conversation.id}">
-							<f:param id="updatePrivatkundeCid" name="cid" value="#{javax.enterprise.context.conversation.id}"/>
+							<f:param id="updateArtikelCid" name="cid" value="#{javax.enterprise.context.conversation.id}"/>
 						</c:if>
 					</h:link>
 				</r:panelMenuItem>	

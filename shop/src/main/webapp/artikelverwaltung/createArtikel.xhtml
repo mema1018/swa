@@ -10,26 +10,26 @@
 	<body>
 		<ui:composition template="/WEB-INF/templates/desktop/main.xml">
 			<ui:define name="metadata">
-				<f:event type="preRenderView" listener="#{artikel.createEmptyArtikel}"/>
+				<f:event type="preRenderView" listener="#{artikelModel.createEmptyArtikel}"/>
 			</ui:define>
 			
-			<ui:param name="pageTitle" value="#{msgKv['createArtikel.title']}"/>
+			<ui:param name="pageTitle" value="#{msgAv['createArtikel.title']}"/>
 		
 			<ui:define name="content">
 				<h1>
-					#{msgKv['createArtikel.heading']}
+					#{msgAv['createArtikel.heading']}
 				</h1>
 		
 				<r:messages id="fehlermeldungGobal" globalOnly="true"/>
 				<r:notifyMessages id="notifyMessages" stayTime="2000" nonblocking="true"/>
 		
 				<h:form id="createArtikelForm">
-					<r:jQuery id="bezeichnungFocus" selector="#bezeichnung" query="focus()"/>
+					
 					<!-- fokussiert auf id="kategorie" statt auf id="nachname" WARUM?
 					<r:focus id="createKundeFormFocus"/>
 					-->
 					
-					<c:set var="artikel" value="#{artikel.neuerArtikel}" scope="view"/>
+					<c:set var="artikel" value="#{artikelModel.neuerArtikel}" scope="view"/>
 					<!--
 						https://issues.jboss.org/browse/AS7-1348
 						http://community.jboss.org/thread/169487 
@@ -37,7 +37,7 @@
 					
 						<h:panelGrid id="createArtikelTabelle" columns="3">
 				
-							<h:outputLabel id="bezeichnungLabel" for="bezeichnung" value="#{msgKv['createPrivatkunde.bezeichnung']}"/>
+							<h:outputLabel id="bezeichnungLabel" for="bezeichnung" value="#{msgAv['createArtikel.bezeichnung']}"/>
 							<h:inputText id="bezeichnung" value="#{artikel.bezeichnung}">
 								<!-- Validierung durch Ajax mit JSF -->
 								<!--
@@ -47,9 +47,9 @@
 								<r:validator oninvalid="$(#{r:element('bezeichnung')}).addClass('invalid')"
 	                                         onvalid="$(#{r:element('bezeichnung')}).removeClass('invalid')"/>
 							</h:inputText>
-							<r:messages id="fehlermeldungenNachname" for="bezeichnung"/>
+							<r:messages id="fehlermeldungenBezeichnung" for="bezeichnung"/>
 				
-							<h:outputLabel id="preisLabel" for="preis" value="#{msgKv['createArtikel.preis']}"/>
+							<h:outputLabel id="preisLabel" for="preis" value="#{msgAv['createArtikel.preis']}"/>
 							<h:inputText id="preis" value="#{artikel.preis}"/>
 							<f:verbatim/>
 												
@@ -57,15 +57,14 @@
 						</h:panelGrid>
 			
 						<p id="buttons">
-							<h:commandButton id="createSubmit" action="#{artikelModel.createArtikel}" value="#{msgKv['createArtikel.submit']}"/>
+							<h:commandButton id="createSubmit" action="#{artikelModel.createArtikel}" value="#{msgAv['createArtikel.submit']}"/>
 							#{' '}
-							<h:commandButton id="reset" type="reset" value="#{msgKv['createArtikel.reset']}"/>
+							<h:commandButton id="reset" type="reset" value="#{msgAv['createArtikel.reset']}"/>
 						</p>
-					</r:graphValidator>
 				</h:form>
 				
 				<p id="hinweisPflichtfelder">
-					#{msgKv['createArtikel.required']}
+					#{msgAv['createArtikel.required']}
 				</p>
 			</ui:define>
 		</ui:composition>
