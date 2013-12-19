@@ -43,14 +43,14 @@
 						<h:outputLabel id="bezeichnungLabel" for="bezeichnung" value="#{msgKv['updateArtikel.bezeichnung']}"/>
 						<h:inputText id="bezeichnung"
 						             value="#{artikel.bezeichnung}"
-						             valueChangeListener="#{artikel.geaendert}">
+						             valueChangeListener="#{artikelModel.geaendert}">
 							<r:validator oninvalid="$(#{r:element('bezeichnung')}).addClass('invalid')"
 	                                     onvalid="$(#{r:element('bezeichnung')}).removeClass('invalid')"/>
 						</h:inputText>
 						<r:messages id="fehlermeldungenBezeichnung" for="bezeichnung"/>
 						
 						<h:outputLabel id="preisLabel" for="preis" value="#{msgKv['updateArtikel.preis']}"/>
-						<h:inputText id="preis" value="#{artikel.preis}" valueChangeListener="#{artikel.geaendert}"/>
+						<h:inputText id="preis" value="#{artikel.preis}" valueChangeListener="#{artikelModel.geaendert}"/>
 						<f:verbatim/>
 						
 					</h:panelGrid>

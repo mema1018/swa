@@ -28,6 +28,16 @@
 					<h:commandButton id="selectButton"
 					                 action="#{warenkorb.add}"
 					                 value="#{msgAv['selectArtikel.select']}"/>
+	
+					<h:commandLink id="updateButtonArtikel"
+					               action="/artikelverwaltung/updateArtikel"
+					               alt="#{msgKv['viewKundeGET.update.alt']}"
+					               rendered="#{artikel}">
+						<h:graphicImage id="editIconPrivat"
+			    	                    name="edit.gif"
+			        	                library="images"/>
+			        </h:commandLink>
+					
 				</h:panelGrid>
 			</h:form>
 		</ui:define>

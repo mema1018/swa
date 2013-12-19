@@ -27,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Pattern;
 
 import org.jboss.logging.Logger;
@@ -63,6 +64,7 @@ import de.shop.util.web.Messages;
 @SessionScoped
 @Stateful
 @TransactionAttribute(SUPPORTS)
+@Transactional
 public class KundeModel implements Serializable {
 	private static final long serialVersionUID = -8817180909526894740L;
 	
@@ -488,7 +490,7 @@ public class KundeModel implements Serializable {
 	}
 	
 
-	@TransactionAttribute
+	@Transactional
 	@Log
 	public String update() {
 		auth.preserveLogin();
