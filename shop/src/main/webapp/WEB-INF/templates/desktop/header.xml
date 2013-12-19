@@ -7,8 +7,12 @@
 
 	<r:toolbar id="headerToolbar" height="65px">
     	<h:link id="homeLink" outcome="/index">
-			<h:graphicImage id="hsLogoImage"
-		    	            name="hs-logo.gif"
+    		<h:graphicImage id="logo"
+		    	            name="logo.jpg"
+		        	        library="images"
+		            	    alt="#{msg['header.logo.alt']}"/>
+			<h:graphicImage id="geprweb"
+		    	            name="gepruefter-webshop.png"
 		        	        library="images"
 		            	    alt="#{msg['header.logo.alt']}"/>
 		</h:link>
