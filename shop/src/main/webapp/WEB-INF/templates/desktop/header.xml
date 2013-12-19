@@ -11,7 +11,7 @@
 		    	            name="logo.jpg"
 		        	        library="images"
 		            	    alt="#{msg['header.logo.alt']}"/>
-			<h:graphicImage id="geprweb"
+			<h:graphicImage style="margin-left: 10px;" id="geprweb"
 		    	            name="gepruefter-webshop.png"
 		        	        library="images"
 		            	    alt="#{msg['header.logo.alt']}"/>
@@ -81,7 +81,7 @@
 				<r:dropDownMenu id="warenkorb">
 					<f:facet name="label">
 						<h:graphicImage id="warenkorbImage"
-			    	                    name="warenkorb.gif"
+			    	                    name="warenkorb2.png"
 			        	                library="images"
 			            	            alt="#{msg['header.warenkorb.alt']}"/>
 					</f:facet>
