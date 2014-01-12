@@ -476,8 +476,7 @@ public abstract class AbstractKunde implements Serializable {
 		return this;
 	}
 	
-	public Set<RolleType> getRollen()
-	{
+	public Set<RolleType> getRollen() {
 		return this.rollen;
 	}
 

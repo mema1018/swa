@@ -46,7 +46,7 @@ public class KundeService implements Serializable {
 	public enum FetchType {
 		NUR_KUNDE, MIT_BESTELLUNGEN, MIT_WARTUNGSVERTRAEGEN
 	}
-	public enum OrderByType{
+	public enum OrderByType {
 		UNORDERED
 	}
 	public enum OrderType {
@@ -196,9 +196,8 @@ public class KundeService implements Serializable {
 		return ids;
 	}
 	
-	public List<AbstractKunde> findKundenByIdPrefix(String id)
-	{
-		final List<AbstractKunde> kunde  = em.createNamedQuery(		
+	public List<AbstractKunde> findKundenByIdPrefix(String id) {
+		final List<AbstractKunde> kunde  = em.createNamedQuery(
 				AbstractKunde.FIND_IDS_BY_PREFIX, AbstractKunde.class)
 				.setParameter(AbstractKunde.PARAM_KUNDE_ID_PREFIX, id + '%')
 				.getResultList();
@@ -206,9 +205,8 @@ public class KundeService implements Serializable {
 		return kunde;
 	}
 	
-	public List<String> findNachnamenByPrefix(String nachnamePrefix)
-	{
-		final List<String> nachnamen  = em.createNamedQuery(		
+	public List<String> findNachnamenByPrefix(String nachnamePrefix) {
+		final List<String> nachnamen  = em.createNamedQuery(
 				AbstractKunde.FIND_NACHNAMEN_BY_PREFIX, String.class)
 				.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX, nachnamePrefix + '%')
 				.getResultList();
