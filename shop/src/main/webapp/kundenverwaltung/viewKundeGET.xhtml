@@ -82,27 +82,8 @@
 					<h:outputText id="maennlichLabel" value="#{msgKv['viewKundeGET.geschlecht']}" rendered="#{privatkunde and kunde.geschlecht eq 'MAENNLICH'}"/>
 					<h:outputText id="maennlich" value="#{msgKv['viewKundeGET.geschlecht.maennlich']}" rendered="#{privatkunde and kunde.geschlecht eq 'MAENNLICH'}"/>
 		
-					<h:outputText id="newsletterLabel" value="#{msgKv['viewKundeGET.newsletter']}"/>
-					<h:selectBooleanCheckbox id="newsletter" value="#{kundeModel.kunde.newsletter}" disabled="true" readonly="true"/>
 				</h:panelGrid>
 							
-				<h:form id="buttons" rendered="#{not empty kundeModel.kunde}">
-					<h:commandLink id="updateButtonPrivatkunde"
-					               action="/kundenverwaltung/updatePrivatkunde"
-					               alt="#{msgKv['viewKundeGET.update.alt']}"
-					               rendered="#{privatkunde}">
-						<h:graphicImage id="editIconPrivat"
-			    	                    name="edit.gif"
-			        	                library="images"/>
-			        </h:commandLink>
-					<h:commandLink id="updateButtonFirmenkunde"
-					               action="/kundenverwaltung/updateFirmenkunde"
-					               alt="#{msgKv['viewKundeGET.update.alt']}"
-					               rendered="#{firmenkunde}">
-						<h:graphicImage id="editIconFirmen"
-			    	                    name="edit.gif"
-			        	                library="images"/>
-			        </h:commandLink>
 				</h:form>
 			</ui:define>
 		</ui:composition>

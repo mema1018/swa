@@ -504,6 +504,15 @@ public abstract class AbstractKunde implements Serializable {
 		return this;
 	}
 
+	public AbstractKunde addRolle(RolleType rollen) {
+		LOGGER.tracef("neue Rollen: %s", rollen);
+		if (this.rollen == null) {
+			this.rollen = new HashSet<>();
+		}
+		this.rollen.add(rollen);
+		LOGGER.tracef("Rollen nachher: %s", this.rollen);
+		return this;
+	} 
 	public URI getBestellungenUri() {
 		return bestellungenUri;
 	}

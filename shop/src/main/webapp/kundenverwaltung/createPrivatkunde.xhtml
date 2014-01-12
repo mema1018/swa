@@ -28,16 +28,17 @@
 					<!-- fokussiert auf id="kategorie" statt auf id="nachname" WARUM?
 					<r:focus id="createKundeFormFocus"/>
 					-->
-					
+   
+	                        
 					<c:set var="kunde" value="#{kundeModel.neuerPrivatkunde}" scope="view"/>
 					<c:set var="adresse" value="#{kunde.adresse}" scope="view"/>
 					<!--
 						https://issues.jboss.org/browse/AS7-1348
 						http://community.jboss.org/thread/169487 
 					-->
-					<r:graphValidator id="kundeValidator" value="#{kunde}" groups="#{kundeModel.passwordGroup}">
+	  	<!--  			<r:graphValidator id="kundeValidator" value="#{kunde}" groups="#{kundeModel.passwordGroup}">
 						<r:messages id="fehlermeldungKundeValidator" for="kundeValidator"/>
-						<r:messages id="fehlermeldungGlobal" globalOnly="true"/>
+						<r:messages id="fehlermeldungGlobal" globalOnly="true"/> -->
 					
 						<h:panelGrid id="createKundeTabelle" columns="3">
 				
@@ -184,7 +185,7 @@
 							#{' '}
 							<h:commandButton id="reset" type="reset" value="#{msgKv['createPrivatkunde.reset']}"/>
 						</p>
-					</r:graphValidator>
+			<!-- 		</r:graphValidator> -->
 				</h:form>
 				
 				<p id="hinweisPflichtfelder">

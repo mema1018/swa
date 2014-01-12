@@ -159,8 +159,8 @@
 				
 				<r:column id="togglerSpalte" colspan="3">
 					<r:collapsibleSubTableToggler id="subTableToggler" for="positionenSubtable"
-					                              collapsedLabel="#{msgKv['viewKundePopup.bestellung']} #{bestellung.id} : #{bestellung.getErzeugt('yyyy-MM-dd')}"
-					                              expandedLabel="#{msgKv['viewKundePopup.bestellung']} #{bestellung.id} : #{bestellung.getErzeugt('yyyy-MM-dd')}"/>
+					                              collapsedLabel="#{msgKv['viewKundePopup.bestellung']} #{bestellung.id} : #{bestellung.getErzeugt()}"
+					                              expandedLabel="#{msgKv['viewKundePopup.bestellung']} #{bestellung.id} : #{bestellung.getErzeugt()}"/>
 				</r:column>
 				
 				<r:collapsibleSubTable id="positionenSubtable"

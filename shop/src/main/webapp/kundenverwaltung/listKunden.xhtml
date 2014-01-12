@@ -156,29 +156,7 @@
 				    	                            name="details.gif"
 				        	                        library="images"/>
 				        	    </h:commandLink>
-							</r:column>
-			
-							<r:column id="getSpalte" rendered="#{not empty kundeModel.kunden}">
-								<h:link id="detailsGET"
-								        outcome="/kundenverwaltung/viewKundeGET"
-										alt="#{msgKv['listKunden.detailsButtonGETAlt']}">
-									<f:param id="idParam" name="kundeId" value="#{kunde.id}"/>
-									<h:graphicImage id="detailsIconGET"
-				    	                            name="details2.gif"
-				        	                        library="images"/>
-								</h:link>
-							</r:column>
-											
-							<r:column id="editSpalte" rendered="#{not empty kundeModel.kunden}">
-								<h:commandLink id="editButton"
-											   action="#{kundeModel.selectForUpdate(kunde)}"
-										       alt="#{msgKv['listKunden.editButtonAlt']}">
-									<h:graphicImage id="editIcon"
-				    	                            name="edit.gif"
-				        	                        library="images"/>
-				        	    </h:commandLink>
-							</r:column>
-							
+							</r:column>																	
 							<r:column id="deleteSpalte" rendered="#{not empty kundeModel.kunden and r:isUserInRole('admin')}">
 								<r:commandLink id="deleteButton"
 											   action="#{kundeModel.delete(kunde)}"

@@ -53,10 +53,10 @@
 					</h:link>
 				</r:panelMenuItem>
 				
-				<r:panelMenuItem id="kundenverwaltungUpdateItem" rendered="#{r:isUserInRole('admin')}">
+				<r:panelMenuItem id="kundenverwaltungUpdateItem" rendered="#{r:isUserInRole('admin, mitarbeiter, kunde')}">
 					<h:link id="kundenverwaltungUpdate"
 					        outcome="/kundenverwaltung/updatePrivatkunde"
-					        value="Kunde aktualisieren"
+					        value="#{msg['nav.kundenverwaltung.aktu']}"
 					        rendered="#{authModel.loggedIn}">
 						<c:if test="#{not empty javax.enterprise.context.conversation.id}">
 							<f:param id="updatePrivatkundeCid" name="cid" value="#{javax.enterprise.context.conversation.id}"/>
@@ -88,20 +88,10 @@
 						#{msg['nav.artikelverwaltung.selectArtikel']}
 					</h:commandLink>
 				</r:panelMenuItem>	
-				<r:panelMenuItem id="artikelVerwaltungUpdateItem" rendered="#{r:isUserInRole('admin')}">
-					<h:link id="artikelVerwaltungUpdate"
-					        outcome="/artikelverwaltung/updateArtikel"
-					        value="Artikel aktualisieren"
-					        rendered="#{authModel.loggedIn}">
-						<c:if test="#{not empty javax.enterprise.context.conversation.id}">
-							<f:param id="updateArtikelCid" name="cid" value="#{javax.enterprise.context.conversation.id}"/>
-						</c:if>
-					</h:link>
-				</r:panelMenuItem>	
-				<r:panelMenuItem id="artikelVerwaltungCreateArtikelItem" rendered="#{r:isUserInRole('admin')}">
+				<r:panelMenuItem id="artikelVerwaltungCreateArtikelItem" rendered="#{r:isUserInRole('admin, mitarbeiter')}">
 					<h:link id="artikelverwaltungCreateArtikel"
 					        outcome="/artikelverwaltung/createArtikel"
-						    value="Neuer Artikel">
+						    value="#{msg['nav.artikelverwaltung.createArtikel']}">
 						<c:if test="#{not empty javax.enterprise.context.conversation.id}">
 							<f:param id="createArtikelCid" name="cid" value="#{javax.enterprise.context.conversation.id}"/>
 						</c:if>

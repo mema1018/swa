@@ -55,29 +55,8 @@
 			
 						<h:outputLabel id="vornameLabel" for="vorname" value="#{msgKv['updatePrivatkunde.vorname']}"/>
 						<h:inputText id="vorname" value="#{kunde.vorname}" valueChangeListener="#{kundeModel.geaendert}"/>
-						<f:verbatim/>
 						
-						<h:outputLabel id="kategorieLabel" value="#{msgKv['updatePrivatkunde.kategorie']}" for="kategorie"/>
-						<r:inputNumberSpinner id="kategorie"
-						                      value="#{kunde.kategorie}"
-						                      minValue="0" maxValue="5"
-						                      inputSize="1"
-						                      valueChangeListener="#{kundeModel.geaendert}"/>
 						<f:verbatim/>
-						
-						<h:outputLabel id="seitLabel"
-						               for="seit"
-						               value="#{msgKv['updatePrivatkunde.seit']}"
-						               escape="false"/>
-						<r:calendar id="seit"
-						            datePattern="#{msgKv['updatePrivatkunde.calendar.pattern']}"
-						            value="#{kunde.seit}"
-						            timezone="CET">
-							<!--
-							<r:validator/>
-							-->
-						</r:calendar>
-						<r:messages id="fehlermeldungSeit" for="seit"/>
 						
 						<h:outputLabel id="umsatzLabel" for="umsatz" value="#{msgKv['updatePrivatkunde.umsatz']}"/>
 						<h:inputText id="umsatz"

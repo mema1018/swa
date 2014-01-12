@@ -2,7 +2,6 @@ package de.shop.kundenverwaltung.web;
 
 import static de.shop.util.Constants.JSF_INDEX;
 import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
-import static javax.ejb.TransactionAttributeType.SUPPORTS;
 import static javax.persistence.PersistenceContextType.EXTENDED;
 
 import java.io.Serializable;
@@ -35,6 +34,7 @@ import org.richfaces.push.cdi.Push;
 import org.richfaces.ui.iteration.SortOrder;
 import org.richfaces.ui.toggle.panelMenu.UIPanelMenuItem;
 
+import de.shop.auth.domain.RolleType;
 import de.shop.auth.service.AuthService;
 import de.shop.auth.web.AuthModel;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
@@ -60,10 +60,10 @@ import de.shop.util.web.Messages;
  * Dialogsteuerung fuer die Kundenverwaltung
  * @author <a href="mailto:Juergen.Zimmermann@HS-Karlsruhe.de">J&uuml;rgen Zimmermann</a>
  */
-@Named
 @SessionScoped
+@Named
+@Log
 @Stateful
-@TransactionAttribute(SUPPORTS)
 @Transactional
 public class KundeModel implements Serializable {
 	private static final long serialVersionUID = -8817180909526894740L;
@@ -96,7 +96,8 @@ public class KundeModel implements Serializable {
 	
 	private static final String CLIENT_ID_DELETE_BUTTON = "form:deleteButton";
 	private static final String MSG_KEY_DELETE_KUNDE_BESTELLUNG = "kunde.deleteMitBestellung";
-	//TODO Unnötige Import
+
+	
 	@PersistenceContext(type = EXTENDED)
 	private transient EntityManager em;
 	
@@ -133,6 +134,9 @@ public class KundeModel implements Serializable {
 	@Inject
 	private FileHelper fileHelper;
 
+	@Inject
+	private AuthService authService;
+	
 	private Long kundeId;
 	
 	private AbstractKunde kunde;
@@ -358,7 +362,7 @@ public class KundeModel implements Serializable {
 		return nachnamen;
 	}
 	
-	@TransactionAttribute    // Bestellungen ggf. nachladen
+	@Transactional   // Bestellungen ggf. nachladen
 	@Log
 	public String details(AbstractKunde ausgewaehlterKunde) {
 		if (ausgewaehlterKunde == null) {
@@ -371,10 +375,12 @@ public class KundeModel implements Serializable {
 		return JSF_VIEW_KUNDE;
 	}
 	
-	@TransactionAttribute
+	@Transactional 
 	@Log
 	public String createPrivatkunde() {
 		AbstractKunde  abK;
+
+
 		if (!captcha.getValue().equals(captchaInput)) {
 			final String outcome = createPrivatkundeErrorMsg(null);
 			return outcome;
@@ -388,6 +394,7 @@ public class KundeModel implements Serializable {
 		neuerPrivatkunde.setHobbies(hobbiesPrivatkunde);
        neuerPrivatkunde.setPassword(as.verschluesseln(neuerPrivatkunde.getPassword()));
 		try {
+			
 			abK = ks.createKunde(neuerPrivatkunde);
 		}
 		catch (EmailExistsException e) {
@@ -399,6 +406,9 @@ public class KundeModel implements Serializable {
 		
 		// Aufbereitung fuer viewKunde.xhtml
 		kundeId = abK.getId();
+		
+		authService.addRolle(abK.getId(), RolleType.KUNDE);
+		
 		kunde = abK;
 		neuerPrivatkunde = null;  // zuruecksetzen
 		hobbies = null;
@@ -490,7 +500,7 @@ public class KundeModel implements Serializable {
 	}
 	
 
-	@Transactional
+	@Transactional 
 	@Log
 	public String update() {
 		auth.preserveLogin();
@@ -559,7 +569,7 @@ public class KundeModel implements Serializable {
 	 * Action Methode, um einen zuvor gesuchten Kunden zu l&ouml;schen
 	 * @return URL fuer Startseite im Erfolgsfall, sonst wieder die gleiche Seite
 	 */
-	@TransactionAttribute
+	@Transactional 
 	@Log
 	public String deleteAngezeigtenKunden() {
 		if (kunde == null) {

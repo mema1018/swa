@@ -49,7 +49,7 @@ public class Privatkunde extends AbstractKunde {
 		return bemerkungen;
 	}
 
-	public void setBemerkung(String bemerkungen) {
+	public void setBemerkungen(String bemerkungen) {
 		this.bemerkungen = bemerkungen;
 	}
 

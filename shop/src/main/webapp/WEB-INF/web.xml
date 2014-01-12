@@ -153,9 +153,11 @@
     <extension>ecss</extension>
     <mime-type>text/css</mime-type>
   </mime-mapping>
+  <!--
   <error-page>
     <location>/error/defaultError.jsf</location>
   </error-page>
+  -->
   <error-page>
     <error-code>403</error-code>
     <location>/error/accessDenied.jsf</location>

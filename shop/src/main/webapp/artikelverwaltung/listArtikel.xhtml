@@ -73,7 +73,13 @@
 		    	                                    name="warenkorb.gif"
 		        	                                library="images"/>
 		        	            </h:commandLink>
+		        	            
+
 							</r:column>
+							
+					 <r:column id="editSpalte" rendered="#{r:isUserInRole('mitarbeiter, admin')}"> 
+		        	            <h:commandLink id="editButton" action="#{artikelModel.selectForUpdate(art)}" alt="#{msgAv['listArtikel.editButtonAlt']}"> <h:graphicImage id="editIcon" name="edit.gif" library="images" /> 
+		        	            </h:commandLink> </r:column>
 						</r:dataTable>
 						
 						<cc:zebrastilMitDatascroller id="zebrastilMitDatascroller" for="artikelTabelle" maxPages="10" rendered="#{not empty artikel}"/>

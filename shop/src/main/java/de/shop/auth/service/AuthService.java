@@ -85,6 +85,13 @@ public class AuthService implements Serializable {
 		ks.findKundeById(kundeId, FetchType.NUR_KUNDE).addRollen(rollen);
 		flushSecurityCache(kundeId.toString());
 	}
+	
+	public void addRolle(Long kundeId, RolleType rollen) {
+
+
+		ks.findKundeById(kundeId, FetchType.NUR_KUNDE).addRolle(rollen);
+		flushSecurityCache(kundeId.toString());
+	}
 
 	public boolean validatePassword(AbstractKunde kunde, String password) {
 		if (kunde == null)

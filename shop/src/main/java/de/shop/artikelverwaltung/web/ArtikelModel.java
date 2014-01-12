@@ -10,7 +10,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.faces.context.Flash;
@@ -30,7 +29,6 @@ import de.shop.auth.web.AuthModel;
 import de.shop.util.AbstractShopException;
 import de.shop.util.Log;
 import de.shop.util.persistence.ConcurrentDeletedException;
-import de.shop.util.web.Captcha;
 import de.shop.util.web.Client;
 import de.shop.util.web.Messages;
 
@@ -86,8 +84,6 @@ public class ArtikelModel implements Serializable {
 	@Inject
 	private AuthModel auth;
 	
-	@Inject
-	private Captcha captcha;
 	
 	@Inject
 	@Client
@@ -268,6 +264,7 @@ public class ArtikelModel implements Serializable {
 	}
 
 	
+	@SuppressWarnings("unused")
 	private String createArtikelErrorMsg(AbstractShopException e) {
 		if (e == null) {
 			messages.error(MSG_KEY_CREATE_PRIVATKUNDE_WRONG_CAPTCHA, locale, CLIENT_ID_CREATE_CAPTCHA_INPUT);

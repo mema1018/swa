@@ -239,12 +239,13 @@ public class AuthModel implements Serializable {
 		return user != null;
 	}
 	
-//	@Log
-//	public List<String> findUsernameListByUsernamePrefix(String usernamePrefix) {
-//		final List<String> usernameList = authService.findKundeByUserName(usernamePrefix);
-//		return usernameList;
-//	}
-//	
+	@Log
+	public List<String> findKundeByUserNameList(String usernamePrefix) {
+		final List<String> usernameList = new ArrayList<String>();
+				usernameList.add(authService.findKundeByUserName(usernamePrefix));
+		return usernameList;
+	}
+	
 	@Log
 	public String findRollenByUsername() {
 		// Gibt es den Usernamen ueberhaupt?

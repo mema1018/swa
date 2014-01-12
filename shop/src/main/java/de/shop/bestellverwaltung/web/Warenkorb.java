@@ -25,6 +25,7 @@ import de.shop.util.Log;
  * @author <a href="mailto:Juergen.Zimmermann@HS-Karlsruhe.de">J&uuml;rgen Zimmermann</a>
  */
 @Named
+
 @ConversationScoped
 public class Warenkorb implements Serializable {
 	private static final long serialVersionUID = -1981070683990640854L;
