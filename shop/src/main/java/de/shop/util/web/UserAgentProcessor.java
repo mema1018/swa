@@ -68,4 +68,5 @@ public class UserAgentProcessor implements Serializable {
     public boolean isMobile() {
         return isPhone() || isTablet();
     }
+    
 }

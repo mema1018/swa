@@ -197,8 +197,8 @@ public class AuthService implements Serializable {
 		System.out.println("FERTIG");
 	}
 	
-	public String findKundeByUserName(String Name) {
-		 final AbstractKunde k = ks.findKundeByUserName(Name);
+	public String findKundeByUserName(String name) {
+		final AbstractKunde k = ks.findKundeByUserName(name);
 		 return Long.toString(k.getId());
 	}
 

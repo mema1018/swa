@@ -27,7 +27,8 @@ import de.shop.util.Log;
 /**
  * @author <a href="mailto:Juergen.Zimmermann@HS-Karlsruhe.de">J&uuml;rgen Zimmermann</a>
  */
-@Model
+@Model //<-- Ist sowohl @Named das es einen Namen bekommt und Injiziert werden kann als auch @RequestScoped
+
 public class BestellungModel implements Serializable {
 	private static final long serialVersionUID = -1790295502719370565L;
 	

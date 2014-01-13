@@ -260,7 +260,7 @@ public class ArtikelModel implements Serializable {
 		artikel = neuerArtikel;
 		neuerArtikel = null;  // zuruecksetzen
 		
-		return JSF_VIEW_ARTIKEL + JSF_REDIRECT_SUFFIX;
+		return JSF_INDEX;
 	}
 
 	
@@ -302,7 +302,7 @@ public class ArtikelModel implements Serializable {
 		
 		return Artikel.class.equals(ausgewaehlterArtikel.getClass())
 				 ? JSF_UPDATE_ARTIKEL
-						   : JSF_UPDATE_ARTIKEL;
+						   : JSF_INDEX;
 		
 			  
 	}
